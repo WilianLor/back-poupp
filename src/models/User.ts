@@ -27,7 +27,16 @@ const UserSchema = new Schema({
   passwordVersion: {
     type: Number,
     default: 1,
-  }
+  },
+  incomeValue: {
+    type: Number,
+  },
+  accounts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Accounts",
+    },
+  ],
 });
 
 UserSchema.pre("save", async function <type>(next) {
