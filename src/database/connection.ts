@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config({
-    path: ".env"
-})
+  path: ".env",
+});
 
 const connection = () => {
   mongoose
@@ -21,4 +21,4 @@ const connection = () => {
     });
 };
 
-export default connection
+export default connection;

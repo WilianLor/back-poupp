@@ -13,7 +13,7 @@ const ExpenseSchema = new Schema({
   },
   value: {
     type: Number,
-    required: true,
+    default: 0,
   },
   maxValue: {
     type: Number,

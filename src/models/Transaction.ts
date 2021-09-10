@@ -5,10 +5,6 @@ const TransactionSchema = new Schema({
         type: String,
         required:  true
     },
-    value: {
-        type: Number,
-        required: true
-    },
     description: {
         type: String,
         required: true
@@ -40,6 +36,9 @@ const TransactionSchema = new Schema({
         type: String,
         required: true
     }
+},
+{
+    timestamps: true
 })
 
 const Transaction = model("Transaction", TransactionSchema);

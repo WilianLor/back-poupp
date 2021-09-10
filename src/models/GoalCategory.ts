@@ -6,7 +6,7 @@ const GoalCategorySchema = new Schema({
     required: true,
     unique: true,
   },
-  pictureUrl: {
+  type: {
     type: String,
     required: true,
   },

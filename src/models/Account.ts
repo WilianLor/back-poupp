@@ -8,7 +8,7 @@ const AccountSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: true,
   },
   bank: {
     type: Schema.Types.ObjectId,

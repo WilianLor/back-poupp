@@ -9,11 +9,6 @@ const CardSchema = new Schema({
     type: Number,
     required: true,
   },
-  value: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
   openDate: {
     type: Date,
     required: true,

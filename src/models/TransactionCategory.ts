@@ -10,7 +10,7 @@ const TransactionCategorySchema = new Schema({
     type: Number,
     required: true,
   },
-  pictureUrl: {
+  type: {
     type: String,
     required: true,
   },

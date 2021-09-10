@@ -2,10 +2,13 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 
 import User from "../models/User";
+import Expense from "../models/Expense";
+import TransactionCategory from "../models/TransactionCategory";
 
 import validateEmail from "../functions/validateEmail";
 import sendResetToken from "../functions/sendResetToken";
 import generateToken from "../functions/generateToken";
+import getUserIdFromToken from "../functions/getUserIdFromToken";
 
 export default {
   async signUp(req: Request, res: Response) {
@@ -55,12 +58,13 @@ export default {
           userId: user._id,
           passwordVersion: user.passwordVersion,
         }),
-        user,
+        user: {
+          name: user.name,
+          hasInitialData: false,
+        },
       };
 
-      return res
-        .status(201)
-        .send({ message: "User successfully created.", user: responseData });
+      return res.status(201).send({ user: responseData });
     } catch (err) {
       return res.status(400).send({ error: "Error: " + err });
     }
@@ -82,6 +86,12 @@ export default {
         return res.status(200).send({ error: "Password not match." });
       }
 
+      let hasInitialData: Boolean;
+
+      if (user.incomeValue) {
+        hasInitialData = true;
+      }
+
       user.password = undefined;
 
       const responseData = {
@@ -89,12 +99,13 @@ export default {
           userId: user._id,
           passwordVersion: user.passwordVersion,
         }),
-        user,
+        user: {
+          name: user.name,
+          hasInitialData,
+        },
       };
 
-      return res
-        .status(200)
-        .send({ message: "Login successfully", user: responseData });
+      return res.status(200).send({ user: responseData });
     } catch (err) {
       return res.status(400).send({ error: "Error: " + err });
     }
@@ -104,7 +115,7 @@ export default {
     const { email } = req.body;
 
     try {
-      const user = await User.findOne({ email })
+      const user = await User.findOne({ email });
 
       if (!user) {
         return res.status(400).send({ error: "Email not found." });
@@ -112,11 +123,11 @@ export default {
 
       let expiresDate = new Date(Date.now());
 
-      expiresDate.setMinutes(expiresDate.getMinutes() + 5)
+      expiresDate.setMinutes(expiresDate.getMinutes() + 5);
 
       const token = (Math.floor(Math.random() * 90000) + 10000).toString();
 
-      await sendResetToken({to: user.email, resetToken: token})
+      await sendResetToken({ to: user.email, resetToken: token });
 
       const hash = await bcrypt.hash(token, 10);
 
@@ -127,64 +138,72 @@ export default {
         },
       });
 
-      return res.status(200).send({message: "Reset token sent successfully."})
-
+      return res
+        .status(200)
+        .send({ message: "Reset token sent successfully." });
     } catch (err) {
       return res.status(400).send({ error: "Error: " + err });
     }
   },
 
   async validateResetPasswordToken(req: Request, res: Response) {
-    const { email, token } = req.params
+    const { email, token } = req.params;
 
     try {
-      
-      if(!validateEmail(email)) {
-        return res.status(400).send({error: "This email is invalid."})
+      if (!validateEmail(email)) {
+        return res.status(400).send({ error: "This email is invalid." });
       }
 
-      const user: any = await User.findOne({email}).select("+passwordResetToken").select("+passwordResetExpires")
+      const user: any = await User.findOne({ email })
+        .select("+passwordResetToken")
+        .select("+passwordResetExpires");
 
-      if(!user) {
-        return res.status(400).send({error: "This email does not have an account."})
+      if (!user) {
+        return res
+          .status(400)
+          .send({ error: "This email does not have an account." });
       }
 
       if (!(await bcrypt.compare(token, user.passwordResetToken))) {
-        return res.status(200).send({ error: "This reset token does not match." });
+        return res
+          .status(200)
+          .send({ error: "This reset token does not match." });
       }
 
-      const now = new Date(Date.now())
+      const now = new Date(Date.now());
 
-      const expiresDate = new Date(user.passwordResetExpires)
+      const expiresDate = new Date(user.passwordResetExpires);
 
-      if(expiresDate < now) {
-        return res.status(400).send({error: "This token has expired"})
+      if (expiresDate < now) {
+        return res.status(400).send({ error: "This token has expired" });
       }
 
-      return res.status(200).send({message: "Token is valid"})
-
+      return res.status(200).send({ message: "Token is valid" });
     } catch (err) {
-      return res.status(400).send({error: "Error: "+err})
+      return res.status(400).send({ error: "Error: " + err });
     }
   },
 
   async resetPassword(req: Request, res: Response) {
-    const { password, email } = req.body
+    const { password, email } = req.body;
 
     try {
-      
-      if(!validateEmail(email)) {
-        return res.status(400).send({error: "This email is invalid."})
+      if (!validateEmail(email)) {
+        return res.status(400).send({ error: "This email is invalid." });
       }
 
-      const user: any = await User.findOne({email}).select("+passwordResetToken")
+      const user: any = await User.findOne({ email }).select(
+        "+passwordResetToken"
+      );
 
-      if(!user) {
-        return res.status(400).send({error: "This email does not have an account."})
+      if (!user) {
+        return res
+          .status(400)
+          .send({ error: "This email does not have an account." });
       }
 
-      if(password.length < 6) {
-        return res.status(400).send({error: "This password is too short."})
+      if (password.length < 6) {
+        return res.status(400).send({ error: "This password is too short." });
       }
 
       const hash = await bcrypt.hash(password, 10);
@@ -192,18 +211,60 @@ export default {
       await User.findByIdAndUpdate(user.id, {
         $set: {
           passwordVersion: user.passwordVersion + 1,
-          password: hash
+          password: hash,
         },
         $unset: {
           passwordResetToken: undefined,
-          passwordResetExpires: undefined
-        }
+          passwordResetExpires: undefined,
+        },
       });
 
-      return res.status(200).send({message: "Password reset successfully."})
-
+      return res.status(200).send({ message: "Password reset successfully." });
     } catch (err) {
-      return res.status(400).send({error: "Error: "+err})
+      return res.status(400).send({ error: "Error: " + err });
+    }
+  },
+
+  async initialConfig(req: Request, res: Response) {
+    const { categories, incomeValue } = req.body;
+    const { authorization } = req.headers;
+
+    const { userId } = getUserIdFromToken(authorization);
+
+    if (!incomeValue) {
+      return res
+        .status(400)
+        .send({ error: "The user income value is required." });
+    }
+
+    try {
+      if (!(await User.findById(userId))) {
+        return res.status(400).send({ error: "This user id is invalid." });
+      }
+
+      await User.findByIdAndUpdate(userId, {
+        $set: {
+          incomeValue: incomeValue,
+        },
+      });
+
+      if (categories.length > 0) {
+        categories.map(async (category) => {
+          if (await TransactionCategory.findById(category.categoryId)) {
+            await Expense.create({
+              user: userId,
+              category: category.categoryId,
+              maxValue: category.maxValue,
+            });
+          }
+        });
+      }
+
+      return res
+        .status(201)
+        .send({ message: "Initial configuration has been saved." });
+    } catch (err) {
+      return res.status(400).send({ error: "Error: " + err });
     }
   },
 };

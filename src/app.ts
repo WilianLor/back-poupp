@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import routes from "./routes";
 import connection from "./database/connection";
 
-connection()
+connection();
 
 dotenv.config({
   path: ".env",

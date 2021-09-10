@@ -11,7 +11,6 @@ interface SendMailProps {
 }
 
 const sendResetToken = async ({ to, resetToken }: SendMailProps) => {
-
   const transporterOptions: any = {
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
@@ -19,7 +18,7 @@ const sendResetToken = async ({ to, resetToken }: SendMailProps) => {
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS,
     },
-  }
+  };
 
   const transporter = nodemailer.createTransport(transporterOptions);
 
@@ -87,8 +86,8 @@ const sendResetToken = async ({ to, resetToken }: SendMailProps) => {
   await transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
-    } 
+    }
   });
 };
 
-export default sendResetToken
+export default sendResetToken;
