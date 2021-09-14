@@ -1,12 +1,17 @@
 import { Schema, model } from "mongoose";
 
+export interface BankInterface {
+  name: string;
+  type: string;
+}
+
 const BankSchema = new Schema({
   name: {
     type: String,
     required: true,
     unique: true,
   },
-  pictureUrl: {
+  type: {
     type: String,
     required: true,
   },

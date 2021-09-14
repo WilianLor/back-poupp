@@ -1,6 +1,16 @@
 import { Schema, model } from "mongoose";
 
-const PostSchema = new Schema(
+export interface PostInterface {
+  title: string;
+  image: string;
+  content: string;
+  author: Schema.Types.ObjectId;
+  comments: Schema.Types.ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const PostSchema = new Schema<PostInterface>(
   {
     title: {
       type: String,
@@ -31,7 +41,5 @@ const PostSchema = new Schema(
   }
 );
 
-const Post = model("Post", PostSchema);
+const Post = model<PostInterface>("Post", PostSchema);
 export default Post;
-
-// title, image, content, author, comments.

@@ -1,45 +1,63 @@
 import { Schema, model } from "mongoose";
 
-const TransactionSchema = new Schema({
+export interface TransactionInterface {
+  title: string;
+  description: string;
+  category: Schema.Types.ObjectId;
+  account: Schema.Types.ObjectId;
+  user: Schema.Types.ObjectId;
+  transferAccount: Schema.Types.ObjectId;
+  isCard: boolean;
+  type: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const TransactionSchema = new Schema<TransactionInterface>(
+  {
     title: {
-        type: String,
-        required:  true
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     category: {
-        type: Schema.Types.ObjectId,
-        ref: "Category",
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
     },
     account: {
-        type: Schema.Types.ObjectId,
-        ref: "Account",
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "Account",
+      required: true,
     },
     user: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     transferAccount: {
-        type: Schema.Types.ObjectId,
-        ref: "Account"
+      type: Schema.Types.ObjectId,
+      ref: "Account",
     },
     isCard: {
-        type: Boolean,
-        required: true
+      type: Boolean,
+      required: true,
     },
     type: {
-        type: String,
-        required: true
-    }
-},
-{
-    timestamps: true
-})
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const Transaction = model("Transaction", TransactionSchema);
+const Transaction = model<TransactionInterface>(
+  "Transaction",
+  TransactionSchema
+);
 export default Transaction;

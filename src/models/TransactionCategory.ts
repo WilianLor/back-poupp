@@ -1,6 +1,12 @@
 import { Schema, model } from "mongoose";
 
-const TransactionCategorySchema = new Schema({
+export interface TransactionCategoryInterface {
+  name: string;
+  necessary: number;
+  type: string;
+}
+
+const TransactionCategorySchema = new Schema<TransactionCategoryInterface>({
   name: {
     type: String,
     required: true,
@@ -16,7 +22,7 @@ const TransactionCategorySchema = new Schema({
   },
 });
 
-const TransactionCategory = model(
+const TransactionCategory = model<TransactionCategoryInterface>(
   "TransactionCategory",
   TransactionCategorySchema
 );

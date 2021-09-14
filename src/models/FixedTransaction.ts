@@ -1,6 +1,16 @@
 import { Schema, model } from "mongoose";
 
-const FixedTransactionSchema = new Schema({
+export interface FixedTransactionInterface {
+  value: string;
+  category: Schema.Types.ObjectId;
+  paymentMethod: Schema.Types.ObjectId;
+  description: string;
+  type: string;
+  expirationDate: Date;
+  user: Schema.Types.ObjectId;
+}
+
+const FixedTransactionSchema = new Schema<FixedTransactionInterface>({
   value: {
     type: String,
     required: true,
@@ -34,5 +44,8 @@ const FixedTransactionSchema = new Schema({
   },
 });
 
-const FixedTransaction = model("FixedTransaction", FixedTransactionSchema);
+const FixedTransaction = model<FixedTransactionInterface>(
+  "FixedTransaction",
+  FixedTransactionSchema
+);
 export default FixedTransaction;

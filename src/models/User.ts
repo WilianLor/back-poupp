@@ -1,7 +1,18 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
 
-const UserSchema = new Schema({
+export interface UserInterface {
+  name: string;
+  email: string;
+  password?: string;
+  passwordResetToken?: string;
+  passwordResetExpires?: string;
+  passwordVersion: number;
+  incomeValue: number;
+  accounts: Schema.Types.ObjectId[];
+}
+
+const UserSchema = new Schema<UserInterface>({
   name: {
     type: String,
     required: true,
@@ -46,5 +57,5 @@ UserSchema.pre("save", async function <type>(next) {
   next();
 });
 
-const User = model("User", UserSchema);
+const User = model<UserInterface>("User", UserSchema);
 export default User;

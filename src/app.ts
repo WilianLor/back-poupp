@@ -1,14 +1,7 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import routes from "./routes";
-import connection from "./database/connection";
-
-connection();
-
-dotenv.config({
-  path: ".env",
-});
+import "./services/env"
 
 const app = express();
 

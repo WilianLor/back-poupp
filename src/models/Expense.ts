@@ -1,6 +1,13 @@
 import { Schema, model } from "mongoose";
 
-const ExpenseSchema = new Schema({
+export interface ExpenseInterface {
+  user: Schema.Types.ObjectId;
+  category: Schema.Types.ObjectId;
+  value: number;
+  maxValue: number;
+}
+
+const ExpenseSchema = new Schema<ExpenseInterface>({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -21,5 +28,5 @@ const ExpenseSchema = new Schema({
   },
 });
 
-const Expense = model("Expense", ExpenseSchema);
+const Expense = model<ExpenseInterface>("Expense", ExpenseSchema);
 export default Expense;

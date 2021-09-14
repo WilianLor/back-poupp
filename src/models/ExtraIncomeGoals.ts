@@ -1,6 +1,14 @@
 import { Schema, model } from "mongoose";
 
-const ExtraIncomeGoalSchema = new Schema({
+export interface ExtraIncomeGoalInterface {
+  user: Schema.Types.ObjectId;
+  totalValue: number;
+  reachedValue: number;
+  expirationDate: Date;
+  category: Schema.Types.ObjectId;
+}
+
+const ExtraIncomeGoalSchema = new Schema<ExtraIncomeGoalInterface>({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -26,5 +34,8 @@ const ExtraIncomeGoalSchema = new Schema({
   },
 });
 
-const ExtraIncomeGoal = model("ExtraIncomeGoal", ExtraIncomeGoalSchema);
+const ExtraIncomeGoal = model<ExtraIncomeGoalInterface>(
+  "ExtraIncomeGoal",
+  ExtraIncomeGoalSchema
+);
 export default ExtraIncomeGoal;

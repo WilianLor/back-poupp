@@ -1,6 +1,14 @@
 import { Schema, model } from "mongoose";
 
-const CommentSchema = new Schema(
+export interface CommentInterface {
+  user: Schema.Types.ObjectId;
+  content: string;
+  post: Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const CommentSchema = new Schema<CommentInterface>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -22,5 +30,5 @@ const CommentSchema = new Schema(
   }
 );
 
-const Comment = model("Comment", CommentSchema);
+const Comment = model<CommentInterface>("Comment", CommentSchema);
 export default Comment;

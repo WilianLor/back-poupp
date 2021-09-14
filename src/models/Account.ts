@@ -1,6 +1,14 @@
 import { Schema, model } from "mongoose";
 
-const AccountSchema = new Schema({
+export interface AccountInterface {
+  username: string;
+  user: Schema.Types.ObjectId;
+  bank: Schema.Types.ObjectId;
+  cards: Schema.Types.ObjectId[];
+  transactions: Schema.Types.ObjectId[];
+}
+
+const AccountSchema = new Schema<AccountInterface>({
   username: {
     type: String,
     required: true,
@@ -29,5 +37,5 @@ const AccountSchema = new Schema({
   ],
 });
 
-const Account = model("Account", AccountSchema);
+const Account = model<AccountInterface>("Account", AccountSchema);
 export default Account;

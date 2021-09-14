@@ -1,6 +1,11 @@
 import { Schema, model } from "mongoose";
 
-const ExtraIncomeCategorySchema = new Schema({
+export interface ExtraIncomeCategoryInterface {
+  name: string;
+  type: string;
+}
+
+const ExtraIncomeCategorySchema = new Schema<ExtraIncomeCategoryInterface>({
   name: {
     type: String,
     required: true,
@@ -12,7 +17,7 @@ const ExtraIncomeCategorySchema = new Schema({
   },
 });
 
-const ExtraIncomeCategory = model(
+const ExtraIncomeCategory = model<ExtraIncomeCategoryInterface>(
   "ExtraIncomeCategory",
   ExtraIncomeCategorySchema
 );

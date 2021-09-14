@@ -1,6 +1,14 @@
 import { Schema, model } from "mongoose";
 
-const GoalSchema = new Schema({
+export interface GoalInterface {
+  totalValue: number;
+  reachedValue: number;
+  category: Schema.Types.ObjectId;
+  expirationDate: Date;
+  user: Schema.Types.ObjectId;
+}
+
+const GoalSchema = new Schema<GoalInterface>({
   totalValue: {
     type: Number,
     required: true,
@@ -26,5 +34,5 @@ const GoalSchema = new Schema({
   },
 });
 
-const Goal = model("Goal", GoalSchema);
+const Goal = model<GoalInterface>("Goal", GoalSchema);
 export default Goal;

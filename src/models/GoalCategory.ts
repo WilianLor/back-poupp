@@ -1,6 +1,11 @@
 import { Schema, model } from "mongoose";
 
-const GoalCategorySchema = new Schema({
+export interface GoalCategoryInterface {
+  name: string;
+  type: string;
+}
+
+const GoalCategorySchema = new Schema<GoalCategoryInterface>({
   name: {
     type: String,
     required: true,
@@ -12,5 +17,8 @@ const GoalCategorySchema = new Schema({
   },
 });
 
-const GoalCategory = model("GoalCategory", GoalCategorySchema);
+const GoalCategory = model<GoalCategoryInterface>(
+  "GoalCategory",
+  GoalCategorySchema
+);
 export default GoalCategory;

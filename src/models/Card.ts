@@ -1,5 +1,14 @@
 import { Schema, model } from "mongoose";
 
+export interface CardInterface {
+  username: string;
+  limit: number;
+  openDate: Date;
+  closeDate: Date;
+  account: Schema.Types.ObjectId;
+  user: Schema.Types.ObjectId;
+}
+
 const CardSchema = new Schema({
   username: {
     type: String,

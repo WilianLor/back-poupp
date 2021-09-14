@@ -1,5 +1,15 @@
 import { Schema, model } from "mongoose";
 
+export interface BillInterface {
+  value: number;
+  interest: number;
+  paidValue: number;
+  interestType: string;
+  user: Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const BillSchema = new Schema(
   {
     value: {
