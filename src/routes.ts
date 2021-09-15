@@ -10,7 +10,9 @@ const routes = Router();
 
 routes.post("/signup", userController.signUp);
 routes.post("/signin", userController.signIn);
+
 routes.post("/initialconfig", auth, userController.initialConfig);
+routes.get("/getdata", auth, userController.getData);
 
 routes.put("/forgotpassword", userController.sendResetPasswordToken);
 routes.get("/validatetoken/:email/:token", userController.validateResetPasswordToken);

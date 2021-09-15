@@ -185,7 +185,7 @@ export default {
   },
 
   async resetPassword(req: Request, res: Response) {
-    const { password, email } = req.body;
+    const { password, email, token } = req.body;
 
     try {
       if (!validateEmail(email)) {
@@ -200,6 +200,24 @@ export default {
           .send({ error: "This email does not have an account." });
       }
 
+      if (!token) {
+        return res
+          .status(404)
+          .send({ error: "The reset password token is required." });
+      }
+
+      if (!user.passwordResetToken) {
+        return res
+          .status(403)
+          .send({ error: "This user did not request password change." });
+      }
+
+      if (!(await bcrypt.compare(token, user.passwordResetToken))) {
+        return res
+          .status(403)
+          .send({ error: "This password reset token is invalid." });
+      }
+
       if (password.length < 6) {
         return res.status(406).send({ error: "This password is too short." });
       }
@@ -212,8 +230,8 @@ export default {
           password: hash,
         },
         $unset: {
-          passwordResetToken: undefined,
-          passwordResetExpires: undefined,
+          passwordResetToken: "",
+          passwordResetExpires: "",
         },
       });
 
@@ -261,6 +279,40 @@ export default {
       return res
         .status(201)
         .send({ message: "Initial configuration has been saved." });
+    } catch (err) {
+      return res.status(500).send({ error: "Error: " + err });
+    }
+  },
+
+  async getData(req: Request, res: Response) {
+    const { authorization } = req.headers;
+
+    const { userId, passwordVersion } = getParamsFromToken(authorization);
+
+    try {
+      const user = await User.findById(userId).select("+passwordVersion");
+
+      if (!user) {
+        return res.status(406).send({ error: "Invalid user id." });
+      }
+
+      if (user.passwordVersion !== passwordVersion) {
+        return res
+          .status(403)
+          .send({ error: "The user password was changed." });
+      }
+
+      const data = {
+        token: generateToken({
+          userId: user._id,
+          passwordVersion: user.passwordVersion,
+        }),
+        name: user.name,
+      };
+
+      return res
+        .status(200)
+        .send({ message: "Data search performed successfully.", data });
     } catch (err) {
       return res.status(500).send({ error: "Error: " + err });
     }
