@@ -1,13 +1,17 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PopulatedDoc, Document } from "mongoose";
+
+import { TransactionCategoryInterface } from "./TransactionCategory";
+import { AccountInterface } from "./Account";
+import { UserInterface } from "./User";
 
 export interface FixedTransactionInterface {
   value: string;
-  category: Schema.Types.ObjectId;
-  paymentMethod: Schema.Types.ObjectId;
+  category: PopulatedDoc<TransactionCategoryInterface & Document>;
+  paymentMethod: PopulatedDoc<AccountInterface & Document>;
   description: string;
   type: string;
   expirationDate: Date;
-  user: Schema.Types.ObjectId;
+  user: PopulatedDoc<UserInterface & Document>;
 }
 
 const FixedTransactionSchema = new Schema<FixedTransactionInterface>({

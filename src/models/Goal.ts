@@ -1,11 +1,14 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PopulatedDoc, Document } from "mongoose";
+
+import { GoalCategoryInterface } from "./GoalCategory";
+import { UserInterface } from "./User";
 
 export interface GoalInterface {
   totalValue: number;
   reachedValue: number;
-  category: Schema.Types.ObjectId;
+  category: PopulatedDoc<GoalCategoryInterface & Document>;
   expirationDate: Date;
-  user: Schema.Types.ObjectId;
+  user: PopulatedDoc<UserInterface & Document>;
 }
 
 const GoalSchema = new Schema<GoalInterface>({

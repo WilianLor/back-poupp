@@ -1,11 +1,14 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PopulatedDoc, Document } from "mongoose";
+
+import { CommentInterface } from "./Comment";
+import { UserInterface } from "./User";
 
 export interface PostInterface {
   title: string;
   image: string;
   content: string;
-  author: Schema.Types.ObjectId;
-  comments: Schema.Types.ObjectId[];
+  author: PopulatedDoc<UserInterface & Document>;
+  comments: PopulatedDoc<CommentInterface & Document>[];
   createdAt: Date;
   updatedAt: Date;
 }

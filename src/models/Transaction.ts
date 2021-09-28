@@ -1,12 +1,16 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PopulatedDoc, Document } from "mongoose";
+
+import { TransactionCategoryInterface } from "./TransactionCategory";
+import { AccountInterface } from "./Account";
+import { UserInterface } from "./User";
 
 export interface TransactionInterface {
   title: string;
   description: string;
-  category: Schema.Types.ObjectId;
-  account: Schema.Types.ObjectId;
-  user: Schema.Types.ObjectId;
-  transferAccount: Schema.Types.ObjectId;
+  category: PopulatedDoc<TransactionCategoryInterface & Document>;
+  account: PopulatedDoc<AccountInterface & Document>;
+  user: PopulatedDoc<UserInterface & Document>;
+  transferAccount: PopulatedDoc<AccountInterface & Document>;
   isCard: boolean;
   type: string;
   createdAt: Date;
@@ -25,7 +29,7 @@ const TransactionSchema = new Schema<TransactionInterface>(
     },
     category: {
       type: Schema.Types.ObjectId,
-      ref: "Category",
+      ref: "TransactionCategory",
       required: true,
     },
     account: {

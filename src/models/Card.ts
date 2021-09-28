@@ -1,12 +1,15 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PopulatedDoc, Document } from "mongoose";
+
+import { UserInterface } from "./User";
+import { AccountInterface } from "./Account";
 
 export interface CardInterface {
   username: string;
   limit: number;
   openDate: Date;
   closeDate: Date;
-  account: Schema.Types.ObjectId;
-  user: Schema.Types.ObjectId;
+  account: PopulatedDoc<AccountInterface & Document>;
+  user: PopulatedDoc<UserInterface & Document>;
 }
 
 const CardSchema = new Schema({

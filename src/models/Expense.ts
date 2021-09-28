@@ -1,8 +1,11 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PopulatedDoc, Document } from "mongoose";
+
+import { UserInterface } from "./User";
+import { TransactionCategoryInterface } from "./TransactionCategory";
 
 export interface ExpenseInterface {
-  user: Schema.Types.ObjectId;
-  category: Schema.Types.ObjectId;
+  user: PopulatedDoc<UserInterface & Document>;
+  category: PopulatedDoc<TransactionCategoryInterface & Document>;
   value: number;
   maxValue: number;
 }

@@ -1,11 +1,14 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PopulatedDoc, Document } from "mongoose";
+
+import { UserInterface } from "./User";
+import { ExtraIncomeCategoryInterface } from "./ExtraIncomeCategory";
 
 export interface ExtraIncomeGoalInterface {
-  user: Schema.Types.ObjectId;
+  user: PopulatedDoc<UserInterface & Document>;
   totalValue: number;
   reachedValue: number;
   expirationDate: Date;
-  category: Schema.Types.ObjectId;
+  category: PopulatedDoc<ExtraIncomeCategoryInterface & Document>;
 }
 
 const ExtraIncomeGoalSchema = new Schema<ExtraIncomeGoalInterface>({

@@ -1,11 +1,13 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PopulatedDoc, Document } from "mongoose";
+
+import { UserInterface } from "./User";
 
 export interface BillInterface {
   value: number;
   interest: number;
   paidValue: number;
   interestType: string;
-  user: Schema.Types.ObjectId;
+  user: PopulatedDoc<UserInterface & Document>;
   createdAt: Date;
   updatedAt: Date;
 }

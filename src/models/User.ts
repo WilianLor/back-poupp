@@ -1,5 +1,7 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PopulatedDoc, Document } from "mongoose";
 import bcrypt from "bcryptjs";
+
+import { AccountInterface } from "./Account";
 
 export interface UserInterface {
   name: string;
@@ -9,7 +11,8 @@ export interface UserInterface {
   passwordResetExpires?: string;
   passwordVersion: number;
   incomeValue: number;
-  accounts: Schema.Types.ObjectId[];
+  accounts: PopulatedDoc<AccountInterface & Document>[];
+  admin: boolean;
 }
 
 const UserSchema = new Schema<UserInterface>({
@@ -42,10 +45,14 @@ const UserSchema = new Schema<UserInterface>({
   incomeValue: {
     type: Number,
   },
+  admin: {
+    type: Boolean,
+    default: false,
+  },
   accounts: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Accounts",
+      ref: "Account",
     },
   ],
 });
