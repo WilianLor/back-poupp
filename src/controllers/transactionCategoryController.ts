@@ -6,24 +6,24 @@ export default {
     const { name, necessary, type } = req.body;
 
     if (!name) {
-      return res.status(404).send({ error: "The category name is required." });
+      return res.status(404).json({ error: "The category name is required." });
     }
 
     if (!necessary) {
       return res
         .status(404)
-        .send({ error: "The category necessary is required." });
+        .json({ error: "The category necessary is required." });
     }
 
     if (!type) {
-      return res.status(404).send({ error: "The category type is required." });
+      return res.status(404).json({ error: "The category type is required." });
     }
 
     try {
       if (await TransactionCategory.findOne({ name })) {
         return res
           .status(406)
-          .send({ error: "This category name is already in use." });
+          .json({ error: "This category name is already in use." });
       }
 
       await TransactionCategory.create({
@@ -32,9 +32,9 @@ export default {
         type,
       });
 
-      return res.status(201).send({ message: "Category created." });
+      return res.status(201).json({ message: "Category created." });
     } catch (err) {
-      return res.status(500).send({ error: "Error" + err });
+      return res.status(500);
     }
   },
 
@@ -42,9 +42,9 @@ export default {
     try {
       const transactionCategories = await TransactionCategory.find();
 
-      return res.status(200).send(transactionCategories);
+      return res.status(200).json(transactionCategories);
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 };

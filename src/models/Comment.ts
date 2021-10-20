@@ -4,7 +4,7 @@ import { UserInterface } from "./User";
 import { PostInterface } from "./Post";
 
 export interface CommentInterface {
-  user: PopulatedDoc<UserInterface & Document>;
+  author: PopulatedDoc<UserInterface & Document>;
   content: string;
   post: PopulatedDoc<PostInterface & Document>;
   createdAt: Date;
@@ -13,7 +13,7 @@ export interface CommentInterface {
 
 const CommentSchema = new Schema<CommentInterface>(
   {
-    user: {
+    author: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,

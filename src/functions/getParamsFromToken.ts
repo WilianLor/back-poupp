@@ -5,7 +5,7 @@ interface Data {
   passwordVersion: number;
 }
 
-const getUserIdFromToken = (authorization: string) => {
+const getParamsFromToken = (authorization: string) => {
   const tokenSplited = authorization.split(" ");
 
   const token = tokenSplited[1];
@@ -15,4 +15,4 @@ const getUserIdFromToken = (authorization: string) => {
   return { userId, passwordVersion };
 };
 
-export default getUserIdFromToken;
+export default getParamsFromToken;

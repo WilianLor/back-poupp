@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 
 import Bill from "../models/Bill";
-import User from "../models/User";
 
 import getParamsFromToken from "../functions/getParamsFromToken";
 
@@ -12,31 +11,23 @@ export default {
 
     const { userId } = getParamsFromToken(authorization);
 
-    if (!userId) {
-      return res.status(406).send({ error: "This user id is invalid." });
-    }
-
     if (!value) {
-      return res.status(404).send({ error: "The bill value is required." });
+      return res.status(404).json({ error: "The bill value is required." });
     }
 
     if (!interest) {
       return res
         .status(404)
-        .send({ error: "The bill interest value is required." });
+        .json({ error: "The bill interest value is required." });
     }
 
     if (!interestType) {
       return res
         .status(404)
-        .send({ error: "The bill interest type value is required." });
+        .json({ error: "The bill interest type value is required." });
     }
 
     try {
-      if (!(await User.findById(userId))) {
-        return res.status(406).send({ error: "This user id is invalid." });
-      }
-
       await Bill.create({
         value,
         interest,
@@ -45,9 +36,9 @@ export default {
         paidValue: paidValue || 0,
       });
 
-      return res.status(201).send({ message: "Bill created." });
+      return res.status(201).json({ message: "Bill created." });
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 
@@ -57,15 +48,11 @@ export default {
     const { userId } = getParamsFromToken(authorization);
 
     try {
-      if (!(await User.findById(userId))) {
-        return res.status(406).send({ error: "This user id is invalid." });
-      }
-
       const bills = await Bill.find({ user: userId });
 
-      return res.status(200).send(bills);
+      return res.status(200).json(bills);
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 };

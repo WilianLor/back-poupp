@@ -16,31 +16,31 @@ export default {
 
     try {
       if (!name) {
-        return res.status(404).send({ error: "Name is required." });
+        return res.status(404).json({ error: "Name is required." });
       }
 
       if (name.length < 4) {
-        return res.status(406).send({ error: "Name too short." });
+        return res.status(406).json({ error: "Name too short." });
       }
 
       if (!email) {
-        return res.status(404).send({ error: "Email is required." });
+        return res.status(404).json({ error: "Email is required." });
       }
 
       if (!validateEmail(email)) {
-        return res.status(406).send({ error: "Email is not valid." });
+        return res.status(406).json({ error: "Email is not valid." });
       }
 
       if (await User.findOne({ email })) {
-        return res.status(406).send({ error: "This email is already in use." });
+        return res.status(406).json({ error: "This email is already in use." });
       }
 
       if (!password) {
-        return res.status(404).send({ error: "Password is required." });
+        return res.status(404).json({ error: "Password is required." });
       }
 
       if (password.length < 6) {
-        return res.status(406).send({ error: "Password too short." });
+        return res.status(406).json({ error: "Password too short." });
       }
 
       const userData = {
@@ -60,13 +60,14 @@ export default {
         }),
         user: {
           name: user.name,
+          admin: user.admin,
           hasInitialData: false,
         },
       };
 
-      return res.status(201).send({ user: responseData });
+      return res.status(201).json(responseData);
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 
@@ -79,14 +80,14 @@ export default {
         .select("+passwordVersion");
 
       if (!user) {
-        return res.status(404).send({ error: "Email not found." });
+        return res.status(404).json({ error: "Email not found." });
       }
 
       if (!(await bcrypt.compare(password, user.password))) {
-        return res.status(406).send({ error: "Password not match." });
+        return res.status(406).json({ error: "Password not match." });
       }
 
-      let hasInitialData: Boolean;
+      let hasInitialData: Boolean = false;
 
       if (user.incomeValue) {
         hasInitialData = true;
@@ -101,13 +102,14 @@ export default {
         }),
         user: {
           name: user.name,
+          admin: user.admin,
           hasInitialData,
         },
       };
 
-      return res.status(200).send({ user: responseData });
+      return res.status(200).json(responseData);
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 
@@ -116,10 +118,6 @@ export default {
 
     try {
       const user = await User.findOne({ email });
-
-      if (!user) {
-        return res.status(404).send({ error: "Email not found." });
-      }
 
       let expiresDate = new Date(Date.now());
 
@@ -140,34 +138,28 @@ export default {
 
       return res
         .status(200)
-        .send({ message: "Reset token sent successfully." });
+        .json({ message: "Reset token sent successfully." });
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 
   async validateResetPasswordToken(req: Request, res: Response) {
-    const { email, token } = req.params;
+    const { email, token } = req.query;
 
     try {
-      if (!validateEmail(email)) {
-        return res.status(406).send({ error: "This email is invalid." });
+      if (!validateEmail(email.toString())) {
+        return res.status(406).json({ error: "This email is invalid." });
       }
 
-      const user = await User.findOne({ email })
+      const user = await User.findOne({ email: email.toString() })
         .select("+passwordResetToken")
         .select("+passwordResetExpires");
 
-      if (!user) {
+      if (!(await bcrypt.compare(token.toString(), user.passwordResetToken))) {
         return res
           .status(406)
-          .send({ error: "This email does not have an account." });
-      }
-
-      if (!(await bcrypt.compare(token, user.passwordResetToken))) {
-        return res
-          .status(406)
-          .send({ error: "This reset token does not match." });
+          .json({ error: "This reset token does not match." });
       }
 
       const now = new Date(Date.now());
@@ -175,12 +167,12 @@ export default {
       const expiresDate = new Date(user.passwordResetExpires);
 
       if (expiresDate < now) {
-        return res.status(406).send({ error: "This token has expired" });
+        return res.status(406).json({ error: "This token has expired" });
       }
 
-      return res.status(200).send({ message: "Token is valid" });
+      return res.status(200).json({ message: "Token is valid" });
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 
@@ -189,37 +181,31 @@ export default {
 
     try {
       if (!validateEmail(email)) {
-        return res.status(406).send({ error: "This email is invalid." });
+        return res.status(406).json({ error: "This email is invalid." });
       }
 
       const user = await User.findOne({ email }).select("+passwordResetToken");
 
-      if (!user) {
-        return res
-          .status(404)
-          .send({ error: "This email does not have an account." });
-      }
-
       if (!token) {
         return res
           .status(404)
-          .send({ error: "The reset password token is required." });
+          .json({ error: "The reset password token is required." });
       }
 
       if (!user.passwordResetToken) {
         return res
           .status(403)
-          .send({ error: "This user did not request password change." });
+          .json({ error: "This user did not request password change." });
       }
 
       if (!(await bcrypt.compare(token, user.passwordResetToken))) {
         return res
           .status(403)
-          .send({ error: "This password reset token is invalid." });
+          .json({ error: "This password reset token is invalid." });
       }
 
       if (password.length < 6) {
-        return res.status(406).send({ error: "This password is too short." });
+        return res.status(406).json({ error: "This password is too short." });
       }
 
       const hash = await bcrypt.hash(password, 10);
@@ -235,9 +221,9 @@ export default {
         },
       });
 
-      return res.status(200).send({ message: "Password reset successfully." });
+      return res.status(200).json({ message: "Password reset successfully." });
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 
@@ -250,14 +236,10 @@ export default {
     if (!incomeValue) {
       return res
         .status(404)
-        .send({ error: "The user income value is required." });
+        .json({ error: "The user income value is required." });
     }
 
     try {
-      if (!(await User.findById(userId))) {
-        return res.status(406).send({ error: "This user id is invalid." });
-      }
-
       await User.findByIdAndUpdate(userId, {
         $set: {
           incomeValue: incomeValue,
@@ -278,28 +260,29 @@ export default {
 
       return res
         .status(201)
-        .send({ message: "Initial configuration has been saved." });
+        .json({ message: "Initial configuration has been saved." });
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 
   async getData(req: Request, res: Response) {
     const { authorization } = req.headers;
-
     const { userId, passwordVersion } = getParamsFromToken(authorization);
 
     try {
       const user = await User.findById(userId).select("+passwordVersion");
 
-      if (!user) {
-        return res.status(406).send({ error: "Invalid user id." });
-      }
-
       if (user.passwordVersion !== passwordVersion) {
         return res
           .status(403)
-          .send({ error: "The user password was changed." });
+          .json({ error: "The user password was changed." });
+      }
+
+      let hasInitialData: Boolean = false;
+
+      if (user.incomeValue) {
+        hasInitialData = true;
       }
 
       const data = {
@@ -308,13 +291,13 @@ export default {
           passwordVersion: user.passwordVersion,
         }),
         name: user.name,
+        hasInitialData,
+        admin: user.admin,
       };
 
-      return res
-        .status(200)
-        .send({ message: "Data search performed successfully.", data });
+      return res.status(200).json(data);
     } catch (err) {
-      return res.status(500).send({ error: "Error: " + err });
+      return res.status(500);
     }
   },
 };

@@ -9,6 +9,7 @@ export interface PostInterface {
   content: string;
   author: PopulatedDoc<UserInterface & Document>;
   comments: PopulatedDoc<CommentInterface & Document>[];
+  topic: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,6 +31,10 @@ const PostSchema = new Schema<PostInterface>(
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+    },
+    topic: {
+      type: String,
       required: true,
     },
     comments: [
