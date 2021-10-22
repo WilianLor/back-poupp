@@ -11,7 +11,7 @@ const BankSchema = new Schema({
     required: true,
     unique: true,
   },
-  type: {
+  picture: {
     type: String,
     required: true,
   },

@@ -2,6 +2,7 @@ import Post from "../models/Post";
 import Comment from "../models/Comment";
 import getParamsFromToken from "../functions/getParamsFromToken";
 import { Request, Response } from "express";
+import { isValidObjectId } from "mongoose";
 
 export default {
   async create(req: Request, res: Response) {
@@ -42,11 +43,11 @@ export default {
   async getAll(req: Request, res: Response) {
     const { topic } = req.query;
 
-    try {
-      if (topic !== "extraincome" && topic !== "pouppeducate") {
-        return res.status(406).json({ error: "This post topic is invalid" });
-      }
+    if (topic !== "extraincome" && topic !== "pouppeducate") {
+      return res.status(406).json({ error: "This post topic is invalid" });
+    }
 
+    try {
       const posts = await Post.find({ topic }).select([
         "-author",
         "-comments",
@@ -64,6 +65,10 @@ export default {
 
   async getOne(req: Request, res: Response) {
     const { postId } = req.query;
+
+    if (!isValidObjectId(postId)) {
+      return res.status(404).json({ error: "This post id is invalid." });
+    }
 
     try {
       const post = await await Post.findById(postId)
@@ -83,7 +88,15 @@ export default {
   async delete(req: Request, res: Response) {
     const { postId } = req.query;
 
+    if (!isValidObjectId(postId)) {
+      return res.status(404).json({ error: "This post id is invalid." });
+    }
+
     try {
+      if (!(await Post.findById(postId))) {
+        return res.status(404).json({ error: "This post does not exists." });
+      }
+
       await Post.findByIdAndDelete(postId);
       await Comment.deleteMany({ post: postId });
 

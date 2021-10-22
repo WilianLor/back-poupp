@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { isValidObjectId } from "mongoose";
 
 import Comment from "../models/Comment";
 import Post from "../models/Post";
@@ -12,6 +13,10 @@ export default {
     const { authorization } = req.headers;
 
     const { userId } = getParamsFromToken(authorization);
+
+    if (!isValidObjectId(postId)) {
+      return res.status(404).json({ error: "This post id is invalid." });
+    }
 
     try {
       const post = await Post.findById(postId);
@@ -38,9 +43,7 @@ export default {
         $push: { comments: comment._id },
       });
 
-      return res
-        .status(201)
-        .json(comment);
+      return res.status(201).json(comment);
     } catch (err) {
       return res.status(500);
     }
@@ -49,7 +52,9 @@ export default {
   async delete(req: Request, res: Response) {
     const { commentId } = req.query;
 
-    console.log(commentId);
+    if (!isValidObjectId(commentId)) {
+      return res.status(404).json({ error: "This comment id is invalid." });
+    }
 
     try {
       const comment = await Comment.findById(commentId);
