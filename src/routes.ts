@@ -7,6 +7,7 @@ import postController from "./controllers/postController";
 import commentController from "./controllers/commentController";
 import bankController from "./controllers/bankController";
 import accountController from "./controllers/accountController";
+import goalCategoryController from "./controllers/goalCategoryController";
 
 import auth from "./middlewares/auth";
 import admin from "./middlewares/admin";
@@ -27,6 +28,11 @@ routes.post(
   "/transactionscategories/create",
   admin,
   transactionCategoriesController.create
+);
+routes.delete(
+  "/transactionscategories/delete",
+  admin,
+  transactionCategoriesController.delete
 );
 routes.get(
   "/transactionscategories",
@@ -52,5 +58,9 @@ routes.get("/banks", auth, bankController.getAll);
 routes.post("/accounts/create", auth, accountController.create);
 routes.get("/accounts", auth, accountController.getAll);
 routes.delete("/accounts/delete", auth, accountController.delete);
+
+routes.post("/goalscategories/create", admin, goalCategoryController.create);
+routes.get("/goalscategories", auth, goalCategoryController.getAll);
+routes.delete("/goalscategories/delete", admin, goalCategoryController.delete);
 
 export default routes;

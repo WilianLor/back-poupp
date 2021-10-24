@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { isValidObjectId } from "mongoose";
+
 import Bank from "../models/Bank";
 import Account from "../models/Account";
 import User from "../models/User";
+
 import getParamsFromToken from "../functions/getParamsFromToken";
 
 export default {

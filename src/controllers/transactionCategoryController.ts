@@ -1,5 +1,8 @@
-import TransactionCategory from "../models/TransactionCategory";
+import { isValidObjectId } from "mongoose";
 import { Request, Response } from "express";
+
+import TransactionCategory from "../models/TransactionCategory";
+import Transaction from "../models/Transaction";
 
 export default {
   async create(req: Request, res: Response) {
@@ -33,6 +36,45 @@ export default {
       });
 
       return res.status(201).json({ message: "Category created." });
+    } catch (err) {
+      return res.status(500);
+    }
+  },
+
+  async delete(req: Request, res: Response) {
+    const { transactionCategoryId } = req.query;
+
+    if (!transactionCategoryId) {
+      return res
+        .status(404)
+        .json({ error: "The transaction category name id is required." });
+    }
+
+    if (!isValidObjectId(transactionCategoryId)) {
+      return res
+        .status(406)
+        .json({ error: "This transaction category id is invalid." });
+    }
+
+    try {
+      if (!(await TransactionCategory.findById(transactionCategoryId))) {
+        return res
+          .status(404)
+          .json({ error: "This transaction category does not exists." });
+      }
+
+      if (await Transaction.findOne({ category: transactionCategoryId })) {
+        return res.status(406).json({
+          error:
+            "You cannot remove this transaction category as there are transactions linked to it.",
+        });
+      }
+
+      await TransactionCategory.findByIdAndDelete(transactionCategoryId);
+
+      return res
+        .status(200)
+        .json({ message: "Transaction category removed with success." });
     } catch (err) {
       return res.status(500);
     }
