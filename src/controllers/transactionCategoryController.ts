@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 
 import TransactionCategory from "../models/TransactionCategory";
 import Transaction from "../models/Transaction";
+import Expense from "../models/Expense";
 
 export default {
   async create(req: Request, res: Response) {
@@ -67,6 +68,13 @@ export default {
         return res.status(406).json({
           error:
             "You cannot remove this transaction category as there are transactions linked to it.",
+        });
+      }
+
+      if (await Expense.findOne({ category: transactionCategoryId })) {
+        return res.status(406).json({
+          error:
+            "You cannot remove this transaction category as there are expenses linked to it.",
         });
       }
 
