@@ -8,6 +8,7 @@ import commentController from "./controllers/commentController";
 import bankController from "./controllers/bankController";
 import accountController from "./controllers/accountController";
 import goalCategoryController from "./controllers/goalCategoryController";
+import extraIncomeCategoryController from "./controllers/extraIncomeCategoryController";
 
 import auth from "./middlewares/auth";
 import admin from "./middlewares/admin";
@@ -62,5 +63,21 @@ routes.delete("/accounts/delete", auth, accountController.delete);
 routes.post("/goalscategories/create", admin, goalCategoryController.create);
 routes.get("/goalscategories", auth, goalCategoryController.getAll);
 routes.delete("/goalscategories/delete", admin, goalCategoryController.delete);
+
+routes.post(
+  "/extraincomecategories/create",
+  admin,
+  extraIncomeCategoryController.create
+);
+routes.delete(
+  "/extraincomecategories/delete",
+  admin,
+  extraIncomeCategoryController.delete
+);
+routes.get(
+  "/extraincomecategories",
+  auth,
+  extraIncomeCategoryController.getAll
+);
 
 export default routes;
