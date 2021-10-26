@@ -50,8 +50,6 @@ export default {
 
     const expirationDateFormated = new Date(expirationDate);
 
-    console.log(expirationDateFormated);
-
     if (expirationDateFormated < new Date(Date.now())) {
       return res
         .status(406)

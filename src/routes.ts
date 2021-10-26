@@ -11,6 +11,7 @@ import goalCategoryController from "./controllers/goalCategoryController";
 import extraIncomeCategoryController from "./controllers/extraIncomeCategoryController";
 import extraIncomeGoalController from "./controllers/extraIncomeGoalController";
 import expenseController from "./controllers/expenseController";
+import goalController from "./controllers/goalController";
 
 import auth from "./middlewares/auth";
 import admin from "./middlewares/admin";
@@ -93,5 +94,9 @@ routes.get("/extraincomegoals", auth, extraIncomeGoalController.getAll);
 routes.post("/expenses/create", auth, expenseController.create);
 routes.delete("/expenses/delete", auth, expenseController.delete);
 routes.get("/expenses", auth, expenseController.getAll);
+
+routes.post("/goals/create", auth, goalController.create);
+routes.delete("/goals/delete", auth, goalController.delete);
+routes.get("/goals", auth, goalController.getAll);
 
 export default routes;
