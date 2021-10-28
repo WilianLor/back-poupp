@@ -9,7 +9,7 @@ export interface AccountInterface {
   username: string;
   user: PopulatedDoc<UserInterface & Document>;
   bank: PopulatedDoc<BankInterface & Document>;
-  cards: PopulatedDoc<CardInterface & Document>[];
+  card: PopulatedDoc<CardInterface & Document>;
   value: number;
   transactions: PopulatedDoc<TransactionInterface & Document>[];
 }
@@ -33,12 +33,10 @@ const AccountSchema = new Schema<AccountInterface>({
     type: Number,
     required: true,
   },
-  cards: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Card",
-    },
-  ],
+  card: {
+    type: Schema.Types.ObjectId,
+    ref: "Card",
+  },
   transactions: [
     {
       type: Schema.Types.ObjectId,

@@ -2,10 +2,10 @@ import { Schema, model } from "mongoose";
 
 export interface BankInterface {
   name: string;
-  type: string;
+  picture: string;
 }
 
-const BankSchema = new Schema({
+const BankSchema = new Schema<BankInterface>({
   name: {
     type: String,
     required: true,
@@ -17,5 +17,5 @@ const BankSchema = new Schema({
   },
 });
 
-const Bank = model("Bank", BankSchema);
+const Bank = model<BankInterface>("Bank", BankSchema);
 export default Bank;

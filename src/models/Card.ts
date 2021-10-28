@@ -4,29 +4,24 @@ import { UserInterface } from "./User";
 import { AccountInterface } from "./Account";
 
 export interface CardInterface {
-  username: string;
   limit: number;
-  openDate: Date;
-  closeDate: Date;
+  closeDay: number;
   account: PopulatedDoc<AccountInterface & Document>;
   user: PopulatedDoc<UserInterface & Document>;
+  value: number;
 }
 
-const CardSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
+const CardSchema = new Schema<CardInterface>({
+  value: {
+    type: Number,
+    default: 0,
   },
   limit: {
     type: Number,
     required: true,
   },
-  openDate: {
-    type: Date,
-    required: true,
-  },
-  closeDate: {
-    type: Date,
+  closeDay: {
+    type: Number,
     required: true,
   },
   account: {
@@ -41,5 +36,5 @@ const CardSchema = new Schema({
   },
 });
 
-const Card = model("Card", CardSchema);
+const Card = model<CardInterface>("Card", CardSchema);
 export default Card;

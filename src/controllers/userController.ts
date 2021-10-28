@@ -62,6 +62,7 @@ export default {
           name: user.name,
           admin: user.admin,
           hasInitialData: false,
+          createdAt: user.createdAt,
         },
       };
 
@@ -104,6 +105,7 @@ export default {
           name: user.name,
           admin: user.admin,
           hasInitialData,
+          createdAt: user.createdAt,
         },
       };
 
@@ -248,7 +250,12 @@ export default {
 
       if (categories.length > 0) {
         categories.map(async (category) => {
-          if (await TransactionCategory.findById(category.categoryId)) {
+          const expenseCategory = await TransactionCategory.findOne({
+            _id: category.categoryId,
+            income: false,
+          });
+
+          if (expenseCategory && expenseCategory.income === false) {
             await Expense.create({
               user: userId,
               category: category.categoryId,
@@ -293,6 +300,7 @@ export default {
         name: user.name,
         hasInitialData,
         admin: user.admin,
+        createdAt: user.createdAt,
       };
 
       return res.status(200).json(data);

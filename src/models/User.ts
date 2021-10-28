@@ -13,49 +13,56 @@ export interface UserInterface {
   incomeValue: number;
   accounts: PopulatedDoc<AccountInterface & Document>[];
   admin: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const UserSchema = new Schema<UserInterface>({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    select: false,
-  },
-  passwordResetToken: {
-    type: String,
-    select: false,
-  },
-  passwordResetExpires: {
-    type: String,
-    select: false,
-  },
-  passwordVersion: {
-    type: Number,
-    default: 1,
-  },
-  incomeValue: {
-    type: Number,
-  },
-  admin: {
-    type: Boolean,
-    default: false,
-  },
-  accounts: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Account",
+const UserSchema = new Schema<UserInterface>(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-  ],
-});
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
+    passwordResetToken: {
+      type: String,
+      select: false,
+    },
+    passwordResetExpires: {
+      type: String,
+      select: false,
+    },
+    passwordVersion: {
+      type: Number,
+      default: 1,
+    },
+    incomeValue: {
+      type: Number,
+    },
+    admin: {
+      type: Boolean,
+      default: false,
+    },
+    accounts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Account",
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 UserSchema.pre("save", async function <type>(next) {
   const hash = await bcrypt.hash(this.password, 10);

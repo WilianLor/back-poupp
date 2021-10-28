@@ -4,6 +4,7 @@ import { GoalCategoryInterface } from "./GoalCategory";
 import { UserInterface } from "./User";
 
 export interface GoalInterface {
+  title: string;
   totalValue: number;
   reachedValue: number;
   category: PopulatedDoc<GoalCategoryInterface & Document>;
@@ -12,6 +13,10 @@ export interface GoalInterface {
 }
 
 const GoalSchema = new Schema<GoalInterface>({
+  title: {
+    type: String,
+    required: true,
+  },
   totalValue: {
     type: Number,
     required: true,

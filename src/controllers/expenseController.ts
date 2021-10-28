@@ -31,7 +31,12 @@ export default {
     }
 
     try {
-      if (!(await TransactionCategory.findById(transactionCategoryId))) {
+      if (
+        !(await TransactionCategory.find({
+          _id: transactionCategoryId,
+          income: false,
+        }))
+      ) {
         return res
           .status(406)
           .json({ error: "This transaction category id is invalid." });
@@ -55,7 +60,7 @@ export default {
 
       await Expense.create(expenseData);
 
-      return res.status(201).json({ error: "Expense create with success." });
+      return res.status(201).json({ message: "Expense create with success." });
     } catch (err) {
       return res.status(500);
     }

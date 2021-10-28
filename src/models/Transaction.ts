@@ -12,6 +12,7 @@ export interface TransactionInterface {
   user: PopulatedDoc<UserInterface & Document>;
   transferAccount: PopulatedDoc<AccountInterface & Document>;
   isCard: boolean;
+  value: number;
   type: string;
   createdAt: Date;
   updatedAt: Date;
@@ -23,6 +24,10 @@ const TransactionSchema = new Schema<TransactionInterface>(
       type: String,
       required: true,
     },
+    value: {
+      type: Number,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
@@ -30,7 +35,6 @@ const TransactionSchema = new Schema<TransactionInterface>(
     category: {
       type: Schema.Types.ObjectId,
       ref: "TransactionCategory",
-      required: true,
     },
     account: {
       type: Schema.Types.ObjectId,
@@ -48,7 +52,6 @@ const TransactionSchema = new Schema<TransactionInterface>(
     },
     isCard: {
       type: Boolean,
-      required: true,
     },
     type: {
       type: String,

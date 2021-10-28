@@ -12,7 +12,7 @@ export interface BillInterface {
   updatedAt: Date;
 }
 
-const BillSchema = new Schema(
+const BillSchema = new Schema<BillInterface>(
   {
     value: {
       type: Number,
@@ -42,5 +42,5 @@ const BillSchema = new Schema(
   }
 );
 
-const Bill = model("Bill", BillSchema);
+const Bill = model<BillInterface>("Bill", BillSchema);
 export default Bill;

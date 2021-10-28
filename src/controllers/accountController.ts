@@ -3,6 +3,7 @@ import { isValidObjectId } from "mongoose";
 
 import Bank from "../models/Bank";
 import Account from "../models/Account";
+import Card from "../models/Card";
 import User from "../models/User";
 
 import getParamsFromToken from "../functions/getParamsFromToken";
@@ -69,6 +70,10 @@ export default {
         return res
           .status(406)
           .json({ error: "This account does not belong to you." });
+      }
+
+      if (account.card) {
+        await Card.findByIdAndDelete(account.card);
       }
 
       await Account.findByIdAndDelete(accountId);

@@ -8,8 +8,7 @@ import getParamsFromToken from "../functions/getParamsFromToken";
 
 export default {
   async create(req: Request, res: Response) {
-    const { postId } = req.query;
-    const { content } = req.body;
+    const { content, postId } = req.body;
     const { authorization } = req.headers;
 
     const { userId } = getParamsFromToken(authorization);

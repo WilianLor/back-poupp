@@ -12,6 +12,8 @@ import extraIncomeCategoryController from "./controllers/extraIncomeCategoryCont
 import extraIncomeGoalController from "./controllers/extraIncomeGoalController";
 import expenseController from "./controllers/expenseController";
 import goalController from "./controllers/goalController";
+import cardController from "./controllers/cardController";
+import transactionController from "./controllers/transactionController";
 
 import auth from "./middlewares/auth";
 import admin from "./middlewares/admin";
@@ -98,5 +100,21 @@ routes.get("/expenses", auth, expenseController.getAll);
 routes.post("/goals/create", auth, goalController.create);
 routes.delete("/goals/delete", auth, goalController.delete);
 routes.get("/goals", auth, goalController.getAll);
+
+routes.post("/cards/create", auth, cardController.create);
+routes.get("/cards", auth, cardController.getAll);
+routes.get("/cards/transactions", auth, cardController.getTransactions);
+
+routes.post("/transactions/create", auth, transactionController.create);
+routes.get(
+  "/transactions/lasts",
+  auth,
+  transactionController.getLastsTransactions
+);
+routes.get(
+  "/transactions/month",
+  auth,
+  transactionController.getMonthTransactions
+);
 
 export default routes;

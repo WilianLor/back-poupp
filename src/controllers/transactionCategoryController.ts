@@ -7,7 +7,13 @@ import Expense from "../models/Expense";
 
 export default {
   async create(req: Request, res: Response) {
-    const { name, necessary, type } = req.body;
+    const { name, necessary, type, income } = req.body;
+
+    if (income === undefined) {
+      return res
+        .status(404)
+        .json({ error: "The category income is required." });
+    }
 
     if (!name) {
       return res.status(404).json({ error: "The category name is required." });
@@ -34,6 +40,7 @@ export default {
         name,
         necessary,
         type,
+        income,
       });
 
       return res.status(201).json({ message: "Category created." });

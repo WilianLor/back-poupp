@@ -8,6 +8,7 @@ import GoalCategory from "../models/GoalCategory";
 export default {
   async create(req: Request, res: Response) {
     const {
+      title,
       totalValue,
       reachedValue = 0,
       expirationDate,
@@ -46,6 +47,10 @@ export default {
       });
     }
 
+    if (!title) {
+      return res.status(404).json({ error: "The goal title is required." });
+    }
+
     const expirationDateFormated = new Date(expirationDate);
 
     if (expirationDateFormated < new Date(Date.now())) {
@@ -55,6 +60,12 @@ export default {
     }
 
     try {
+      if (await Goal.findOne({ title })) {
+        return res
+          .status(406)
+          .json({ error: "This goal name is already in use." });
+      }
+
       if (!(await GoalCategory.findById(goalCategoryId))) {
         return res
           .status(406)
@@ -62,6 +73,7 @@ export default {
       }
 
       const goalData = {
+        title,
         user: userId,
         expirationDate: expirationDateFormated,
         category: goalCategoryId,
