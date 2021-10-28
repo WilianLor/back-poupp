@@ -14,6 +14,7 @@ import expenseController from "./controllers/expenseController";
 import goalController from "./controllers/goalController";
 import cardController from "./controllers/cardController";
 import transactionController from "./controllers/transactionController";
+import fixedTransactionsController from "./controllers/fixedTransactionsController";
 
 import auth from "./middlewares/auth";
 import admin from "./middlewares/admin";
@@ -116,5 +117,17 @@ routes.get(
   auth,
   transactionController.getMonthTransactions
 );
+
+routes.post(
+  "/fixedtransactions/create",
+  auth,
+  fixedTransactionsController.create
+);
+routes.delete(
+  "/fixedtransactions/delete",
+  auth,
+  fixedTransactionsController.delete
+);
+routes.get("/fixedtransactions", auth, fixedTransactionsController.getAll);
 
 export default routes;
