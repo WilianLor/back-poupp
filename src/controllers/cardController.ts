@@ -37,10 +37,16 @@ export default {
     }
 
     try {
-      const account = await Account.findById(accountId);
+      const account = await Account.findById(accountId).populate("bank");
 
       if (!account) {
         return res.status(406).json({ error: "This account does not exists." });
+      }
+
+      if (account.type !== "normal") {
+        return res
+          .status(406)
+          .json({ error: "This account cannot have a card." });
       }
 
       if (account.user.toString() !== userId) {

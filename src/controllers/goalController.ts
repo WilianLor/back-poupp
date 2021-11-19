@@ -4,16 +4,13 @@ import getParamsFromToken from "../functions/getParamsFromToken";
 
 import Goal from "../models/Goal";
 import GoalCategory from "../models/GoalCategory";
+import Account from "../models/Account";
+import Transaction from "../models/Transaction";
+import TransactionCategory from "../models/TransactionCategory";
 
 export default {
   async create(req: Request, res: Response) {
-    const {
-      title,
-      totalValue,
-      reachedValue = 0,
-      expirationDate,
-      goalCategoryId,
-    } = req.body;
+    const { title, totalValue, expirationDate, goalCategoryId } = req.body;
 
     const { authorization } = req.headers;
 
@@ -39,12 +36,6 @@ export default {
       return res
         .status(404)
         .json({ error: "The goal total value is required." });
-    }
-
-    if (totalValue < reachedValue) {
-      return res.status(406).json({
-        error: "The goal total value cannot be less than reached value.",
-      });
     }
 
     if (!title) {
@@ -78,7 +69,6 @@ export default {
         expirationDate: expirationDateFormated,
         category: goalCategoryId,
         totalValue,
-        reachedValue,
       };
 
       await Goal.create(goalData);
@@ -132,7 +122,95 @@ export default {
     try {
       const goals = await Goal.find({ user: userId }).select("-__v");
 
-      return res.status(200).json(goals);
+      const goalAccount = await Account.findOne({ user: userId, type: "goal" });
+
+      if (!goalAccount) {
+        return res.status(404).json({ error: "Make your initial config." });
+      }
+
+      const responseData = {
+        reservedToGoals: goalAccount.value,
+        goals,
+      };
+
+      return res.status(200).json(responseData);
+    } catch (err) {
+      return res.status(500);
+    }
+  },
+
+  async complete(req: Request, res: Response) {
+    const { goalId } = req.query;
+    const { authorization } = req.headers;
+
+    const { userId } = getParamsFromToken(authorization);
+
+    if (!goalId) {
+      return res.status(404).json({ error: "The goal id is required." });
+    }
+
+    if (!isValidObjectId(goalId)) {
+      return res.status(406).json({ error: "This goal id is invalid." });
+    }
+
+    try {
+      const goal = await Goal.findById(goalId);
+
+      if (!goal) {
+        return res.status(404).json({ error: "This goal id is invalid." });
+      }
+
+      if (goal.user.toString() !== userId) {
+        return res
+          .status(406)
+          .json({ error: "This goals does not belong to you." });
+      }
+
+      const goalAccount = await Account.findOne({ user: userId, type: "goal" });
+
+      if (!goalAccount) {
+        return res
+          .status(404)
+          .json({ error: "Do your initial configuration before." });
+      }
+
+      if (goalAccount.value < goal.totalValue) {
+        return res.status(406).json({
+          error:
+            "You dont have money to complete this goal, Add more to your goal account.",
+        });
+      }
+
+      const goalTransactionCategory = await TransactionCategory.findOne({
+        type: "goal",
+      });
+
+      if (!goalTransactionCategory) {
+        return res
+          .status(500)
+          .json({ error: "Goal transaction category needs to be created." });
+      }
+
+      const transactionData = {
+        title: goal.title,
+        value: goal.totalValue,
+        description: `Conclusão da meta: ${goal.title}.`,
+        category: goalTransactionCategory._id,
+        account: goalAccount._id,
+        user: userId,
+        type: "output",
+      };
+
+      const transaction = await Transaction.create(transactionData);
+
+      await Goal.findByIdAndDelete(goal._id);
+
+      await Account.findByIdAndUpdate(goalAccount._id, {
+        value: goalAccount.value - goal.totalValue,
+        $push: { transactions: transaction._id },
+      });
+
+      return res.status(200).json({ message: "This goal is now completed." });
     } catch (err) {
       return res.status(500);
     }

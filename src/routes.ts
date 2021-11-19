@@ -49,6 +49,7 @@ routes.get(
 
 routes.post("/bills/create", auth, billController.create);
 routes.get("/bills", auth, billController.getAll);
+routes.put("/bills/pay", auth, billController.payBills);
 
 routes.post("/posts/create", admin, postController.create);
 routes.delete("/posts/delete", admin, postController.delete);
@@ -101,6 +102,7 @@ routes.get("/expenses", auth, expenseController.getAll);
 routes.post("/goals/create", auth, goalController.create);
 routes.delete("/goals/delete", auth, goalController.delete);
 routes.get("/goals", auth, goalController.getAll);
+routes.put("/goals/complete", auth, goalController.complete);
 
 routes.post("/cards/create", auth, cardController.create);
 routes.get("/cards", auth, cardController.getAll);

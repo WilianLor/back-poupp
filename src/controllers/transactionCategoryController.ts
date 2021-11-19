@@ -19,14 +19,22 @@ export default {
       return res.status(404).json({ error: "The category name is required." });
     }
 
-    if (!necessary) {
-      return res
-        .status(404)
-        .json({ error: "The category necessary is required." });
-    }
-
     if (!type) {
       return res.status(404).json({ error: "The category type is required." });
+    }
+
+    if (!necessary) {
+      if (type !== "bill" && type !== "goal") {
+        return res
+          .status(404)
+          .json({ error: "The category necessary is required." });
+      }
+    } else {
+      if (type === "bill" || type === "goal") {
+        return res
+          .status(404)
+          .json({ error: "This category cannot have necessary." });
+      }
     }
 
     try {
@@ -36,12 +44,26 @@ export default {
           .json({ error: "This category name is already in use." });
       }
 
-      await TransactionCategory.create({
-        name,
-        necessary,
-        type,
-        income,
-      });
+      if (type === "goal" || type === "bill") {
+        if (await TransactionCategory.findOne({ type })) {
+          return res
+            .status(406)
+            .json({ error: "This transaction category type already exists." });
+        }
+
+        await TransactionCategory.create({
+          name,
+          type,
+          income,
+        });
+      } else {
+        await TransactionCategory.create({
+          name,
+          necessary,
+          type,
+          income,
+        });
+      }
 
       return res.status(201).json({ message: "Category created." });
     } catch (err) {
@@ -99,7 +121,9 @@ export default {
     try {
       const transactionCategories = await TransactionCategory.find();
 
-      return res.status(200).json(transactionCategories);
+      const filtredCategories = transactionCategories.filter(category => category.necessary)
+
+      return res.status(200).json(filtredCategories);
     } catch (err) {
       return res.status(500);
     }

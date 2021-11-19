@@ -3,7 +3,8 @@ import { Schema, model, PopulatedDoc, Document } from "mongoose";
 import { UserInterface } from "./User";
 
 export interface BillInterface {
-  value: number;
+  title: string;
+  remainingValue: number;
   interest: number;
   paidValue: number;
   interestType: string;
@@ -14,7 +15,11 @@ export interface BillInterface {
 
 const BillSchema = new Schema<BillInterface>(
   {
-    value: {
+    title: {
+      type: String,
+      required: true,
+    },
+    remainingValue: {
       type: Number,
       required: true,
     },

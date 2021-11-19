@@ -6,7 +6,6 @@ import { UserInterface } from "./User";
 export interface GoalInterface {
   title: string;
   totalValue: number;
-  reachedValue: number;
   category: PopulatedDoc<GoalCategoryInterface & Document>;
   expirationDate: Date;
   user: PopulatedDoc<UserInterface & Document>;
@@ -20,11 +19,6 @@ const GoalSchema = new Schema<GoalInterface>({
   totalValue: {
     type: Number,
     required: true,
-  },
-  reachedValue: {
-    type: Number,
-    required: true,
-    default: 0,
   },
   category: {
     type: Schema.Types.ObjectId,

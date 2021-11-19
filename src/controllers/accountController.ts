@@ -11,14 +11,14 @@ import getParamsFromToken from "../functions/getParamsFromToken";
 export default {
   async create(req: Request, res: Response) {
     const { authorization } = req.headers;
-    const { username, bank, value = 0 } = req.body;
+    const { name, bank, value = 0 } = req.body;
 
     const { userId } = getParamsFromToken(authorization);
 
-    if (!username) {
+    if (!name) {
       return res
         .status(404)
-        .json({ error: "The account username is required." });
+        .json({ error: "The account name is required." });
     }
 
     if (!isValidObjectId(bank)) {
@@ -31,7 +31,7 @@ export default {
       }
 
       const accountData = {
-        username,
+        name,
         user: userId,
         bank,
         value,
@@ -93,7 +93,10 @@ export default {
     const { userId } = getParamsFromToken(authorization);
 
     try {
-      const { accounts } = await User.findById(userId).populate("accounts");
+      const accounts = await Account.find({ user: userId }).select([
+        "-__v",
+        "-transactions",
+      ]);
 
       return res.status(200).json(accounts);
     } catch (err) {

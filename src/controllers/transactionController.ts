@@ -214,6 +214,15 @@ export default {
             .json({ error: "This transfer account does not belong to you." });
         }
 
+        if (account.value < value) {
+          return res
+            .status(406)
+            .json({
+              error:
+                "You do not have the necessary funds to carry out this transaction.",
+            });
+        }
+
         const transferTransactionData = {
           user: userId,
           account: accountId,
@@ -251,12 +260,7 @@ export default {
   async getMonthTransactions(req: Request, res: Response) {
     const { authorization } = req.headers;
 
-    const {
-      month,
-      year,
-      limit = 10,
-      page = 1,
-    } = req.query;
+    const { month, year, limit = 10, page = 1 } = req.query;
 
     const { userId } = getParamsFromToken(authorization);
 

@@ -6,16 +6,17 @@ import { UserInterface } from "./User";
 import { TransactionInterface } from "./Transaction";
 
 export interface AccountInterface {
-  username: string;
+  name: string;
   user: PopulatedDoc<UserInterface & Document>;
   bank: PopulatedDoc<BankInterface & Document>;
-  card: PopulatedDoc<CardInterface & Document>;
+  card?: PopulatedDoc<CardInterface & Document>;
   value: number;
   transactions: PopulatedDoc<TransactionInterface & Document>[];
+  type: string;
 }
 
 const AccountSchema = new Schema<AccountInterface>({
-  username: {
+  name: {
     type: String,
     required: true,
   },
@@ -27,15 +28,20 @@ const AccountSchema = new Schema<AccountInterface>({
   bank: {
     type: Schema.Types.ObjectId,
     ref: "Bank",
-    required: true,
   },
   value: {
     type: Number,
+    default: 0,
     required: true,
   },
   card: {
     type: Schema.Types.ObjectId,
     ref: "Card",
+  },
+  type: {
+    type: String,
+    required: true,
+    default: "normal",
   },
   transactions: [
     {

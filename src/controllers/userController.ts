@@ -9,6 +9,7 @@ import validateEmail from "../functions/validateEmail";
 import sendResetToken from "../functions/sendResetToken";
 import generateToken from "../functions/generateToken";
 import getParamsFromToken from "../functions/getParamsFromToken";
+import Account from "../models/Account";
 
 export default {
   async signUp(req: Request, res: Response) {
@@ -52,6 +53,30 @@ export default {
       const user = await User.create(userData);
 
       user.password = undefined;
+
+      const walletAccountData = {
+        name: "Carteira",
+        user: user._id,
+        type: "wallet",
+      };
+
+      const walletAccount = await Account.create(walletAccountData);
+
+      const goalAccountData = {
+        name: "Metas",
+        user: user._id,
+        type: "goal",
+      };
+
+      const goalAccount = await Account.create(goalAccountData);
+
+      await User.findByIdAndUpdate(user._id, {
+        $push: { accounts: walletAccount._id },
+      });
+
+      await User.findByIdAndUpdate(user._id, {
+        $push: { accounts: goalAccount._id },
+      });
 
       const responseData = {
         token: generateToken({
@@ -242,6 +267,14 @@ export default {
     }
 
     try {
+      const user = await User.findById(userId);
+
+      if (user.incomeValue) {
+        return res
+          .status(406)
+          .json({ error: "This user already made the initial configuration." });
+      }
+
       await User.findByIdAndUpdate(userId, {
         $set: {
           incomeValue: incomeValue,
@@ -255,7 +288,7 @@ export default {
             income: false,
           });
 
-          if (expenseCategory && expenseCategory.income === false) {
+          if (expenseCategory && expenseCategory.necessary) {
             await Expense.create({
               user: userId,
               category: category.categoryId,

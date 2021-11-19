@@ -14,7 +14,7 @@ const BankSchema = new Schema<BankInterface>({
   picture: {
     type: String,
     required: true,
-  },
+  }
 });
 
 const Bank = model<BankInterface>("Bank", BankSchema);

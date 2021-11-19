@@ -8,15 +8,21 @@ import ExtraIncomeGoal from "../models/ExtraIncomeGoals";
 export default {
   async create(req: Request, res: Response) {
     const {
+      title,
       extraIncomeCategory,
       totalValue,
       reachedValue = 0,
-      expirationDate,
     } = req.body;
 
     const { authorization } = req.headers;
 
     const { userId } = getParamsFromToken(authorization);
+
+    if (!title) {
+      return res
+        .status(404)
+        .json({ error: "The extra income title is required." });
+    }
 
     if (!totalValue) {
       return res
@@ -42,20 +48,6 @@ export default {
         .json({ error: "The extra income goal category id is required." });
     }
 
-    if (!expirationDate) {
-      return res.status(404).json({
-        error: "The expiration date is required.",
-      });
-    }
-
-    const expirationDateFormated = new Date(expirationDate);
-
-    if (expirationDateFormated < new Date(Date.now())) {
-      return res
-        .status(406)
-        .json({ error: "This expiration date is invalid." });
-    }
-
     try {
       if (!(await ExtraIncomeCategory.findById(extraIncomeCategory))) {
         return res
@@ -64,7 +56,7 @@ export default {
       }
 
       const extraIncomeGoalData = {
-        expirationDate: expirationDateFormated,
+        title,
         category: extraIncomeCategory,
         reachedValue,
         totalValue,

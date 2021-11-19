@@ -31,15 +31,21 @@ export default {
     }
 
     try {
-      if (
-        !(await TransactionCategory.find({
-          _id: transactionCategoryId,
-          income: false,
-        }))
-      ) {
+      const transactionCategory = await TransactionCategory.findOne({
+        _id: transactionCategoryId,
+        income: false,
+      });
+
+      if (!transactionCategory) {
         return res
           .status(406)
           .json({ error: "This transaction category id is invalid." });
+      }
+
+      if (!transactionCategory.necessary) {
+        return res
+          .status(406)
+          .json({ error: "This transaction category cannot be an expense." });
       }
 
       if (
