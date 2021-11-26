@@ -48,6 +48,7 @@ routes.get(
 );
 
 routes.post("/bills/create", auth, billController.create);
+routes.delete("/bills/delete", auth, billController.delete);
 routes.get("/bills", auth, billController.getAll);
 routes.put("/bills/pay", auth, billController.payBills);
 

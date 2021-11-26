@@ -10,7 +10,14 @@ import Transaction from "../models/Transaction";
 
 export default {
   async create(req: Request, res: Response) {
-    const { remainingValue, interest, paidValue = 0, interestType, title } = req.body;
+    const {
+      remainingValue,
+      interest,
+      paidValue = 0,
+      interestType,
+      title,
+      dueDay,
+    } = req.body;
     const { authorization } = req.headers;
 
     const { userId } = getParamsFromToken(authorization);
@@ -35,6 +42,20 @@ export default {
         .json({ error: "The bill interest type value is required." });
     }
 
+    if (interestType !== "simple" && interestType !== "composed") {
+      return res
+        .status(406)
+        .json({ error: "This bill interest type is invalid." });
+    }
+
+    if (!dueDay) {
+      return res.status(404).json({ error: "The due day is required." });
+    }
+
+    if (dueDay < 1 || dueDay > 31) {
+      return res.status(406).json({ error: "This due day is invalid." });
+    }
+
     try {
       await Bill.create({
         title,
@@ -43,6 +64,7 @@ export default {
         interestType,
         user: userId,
         paidValue: paidValue || 0,
+        dueDay,
       });
 
       return res.status(201).json({ message: "Bill created." });
@@ -155,6 +177,41 @@ export default {
       });
 
       return res.status(200).json({ message: "Bill paid successfully." });
+    } catch (err) {
+      return res.status(500);
+    }
+  },
+
+  async delete(req: Request, res: Response) {
+    const { billId } = req.query;
+    const { authorization } = req.headers;
+
+    const { userId } = getParamsFromToken(authorization);
+
+    if (!billId) {
+      return res.status(404).json({ error: "The bill id is required." });
+    }
+
+    if (!isValidObjectId(billId)) {
+      return res.status(406).json({ error: "This bill id is invalid." });
+    }
+
+    try {
+      const bill = await Bill.findById(billId);
+
+      if (!bill) {
+        return res.status(406).json({ error: "This bill id is invalid." });
+      }
+
+      if (bill.user.toString() !== userId) {
+        return res
+          .status(406)
+          .json({ error: "This bill does not belong to you." });
+      }
+
+      await Bill.findByIdAndDelete(billId);
+
+      return res.status(200).json({ message: "Bill deleted with success." });
     } catch (err) {
       return res.status(500);
     }

@@ -8,6 +8,7 @@ export interface BillInterface {
   interest: number;
   paidValue: number;
   interestType: string;
+  dueDay: number;
   user: PopulatedDoc<UserInterface & Document>;
   createdAt: Date;
   updatedAt: Date;
@@ -31,6 +32,10 @@ const BillSchema = new Schema<BillInterface>(
       type: Number,
       required: true,
       default: 0,
+    },
+    dueDay: {
+      type: Number,
+      required: true,
     },
     interestType: {
       type: String,
