@@ -9,9 +9,14 @@ export interface CardInterface {
   account: PopulatedDoc<AccountInterface & Document>;
   user: PopulatedDoc<UserInterface & Document>;
   value: number;
+  username: string;
 }
 
 const CardSchema = new Schema<CardInterface>({
+  username: {
+    type: String,
+    required: true,
+  },
   value: {
     type: Number,
     default: 0,

@@ -52,7 +52,7 @@ const job = new CronJob("0 0 * * *", async () => {
       if (card.value !== 0) {
         const transactionData = {
           title: `Fatura do cartão: ${account.name}`,
-          description: `Vencimento da fatura do cartão referente a conta ${account.name}`,
+          description: `Vencimento da fatura do cartão referente a conta ${account.name}.`,
           category: invoiceCardTransactionCategory._id,
           account: account._id,
           type: "output",

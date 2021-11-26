@@ -7,10 +7,16 @@ import Account from "../models/Account";
 
 export default {
   async create(req: Request, res: Response) {
-    const { limit, accountId, closeDay } = req.body;
+    const { limit, accountId, closeDay, username } = req.body;
     const { authorization } = req.headers;
 
     const { userId } = getParamsFromToken(authorization);
+
+    if (!username) {
+      return res.status(404).json({
+        error: "The card username is required.",
+      });
+    }
 
     if (!limit) {
       return res
