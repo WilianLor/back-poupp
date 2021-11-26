@@ -94,6 +94,11 @@ routes.delete(
   extraIncomeGoalController.delete
 );
 routes.get("/extraincomegoals", auth, extraIncomeGoalController.getAll);
+routes.put(
+  "/extraincomegoals/income",
+  auth,
+  extraIncomeGoalController.extraIncome
+);
 
 routes.post("/expenses/create", auth, expenseController.create);
 routes.delete("/expenses/delete", auth, expenseController.delete);

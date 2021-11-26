@@ -24,13 +24,13 @@ export default {
     }
 
     if (!necessary) {
-      if (type !== "bill" && type !== "goal") {
+      if (type !== "bill" && type !== "goal" && type !== "extraIncome") {
         return res
           .status(404)
           .json({ error: "The category necessary is required." });
       }
     } else {
-      if (type === "bill" || type === "goal") {
+      if (type === "bill" || type === "goal" || type === "extraIncome") {
         return res
           .status(404)
           .json({ error: "This category cannot have necessary." });
@@ -44,7 +44,7 @@ export default {
           .json({ error: "This category name is already in use." });
       }
 
-      if (type === "goal" || type === "bill") {
+      if (type === "goal" || type === "bill" || type === "extraIncome") {
         if (await TransactionCategory.findOne({ type })) {
           return res
             .status(406)
@@ -121,7 +121,9 @@ export default {
     try {
       const transactionCategories = await TransactionCategory.find();
 
-      const filtredCategories = transactionCategories.filter(category => category.necessary)
+      const filtredCategories = transactionCategories.filter(
+        (category) => category.necessary
+      );
 
       return res.status(200).json(filtredCategories);
     } catch (err) {
