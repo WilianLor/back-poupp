@@ -4,10 +4,11 @@ import getParamsFromToken from "../functions/getParamsFromToken";
 
 import TransactionCategory from "../models/TransactionCategory";
 import Expense from "../models/Expense";
+import Transaction from "../models/Transaction";
 
 export default {
   async create(req: Request, res: Response) {
-    const { transactionCategoryId, value = 0, maxValue } = req.body;
+    const { transactionCategoryId, maxValue } = req.body;
     const { authorization } = req.headers;
 
     const { userId } = getParamsFromToken(authorization);
@@ -60,7 +61,6 @@ export default {
       const expenseData = {
         user: userId,
         maxValue,
-        value,
         category: transactionCategoryId,
       };
 
@@ -112,10 +112,42 @@ export default {
 
     const { userId } = getParamsFromToken(authorization);
 
-    try {
-      const expenses = await Expense.find({ user: userId }).select("-__v");
+    const today = new Date(Date.now());
 
-      return res.status(200).json(expenses);
+    const month = today.getMonth();
+    const year = today.getFullYear();
+
+    try {
+      const responseData = [];
+
+      const expenses = await Expense.find({ user: userId }).select("-__v");
+      const transactions = await Transaction.find({ user: userId });
+
+      expenses.forEach(async (expense) => {
+        const filtredTransactions = transactions.filter(
+          (transaction) =>
+            transaction.createdAt.getMonth() === month &&
+            transaction.createdAt.getFullYear() === year &&
+            transaction.category &&
+            transaction.category.toString() === expense.category.toString() &&
+            transaction.type === "output"
+        );
+
+        let value = 0;
+
+        filtredTransactions.forEach((transaction) => {
+          value += transaction.value;
+        });
+
+        const expenseData = {
+          value,
+          expense,
+        };
+
+        responseData.push(expenseData);
+      });
+
+      return res.status(200).json(responseData);
     } catch (err) {
       return res.status(5000);
     }

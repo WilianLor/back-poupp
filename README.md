@@ -1,4 +1,4 @@
-# ***Poupp API Enpoints documentation***
+# **_Poupp API Enpoints documentation_**
 
 # **User**
 
@@ -1129,8 +1129,6 @@ Create a expense.
 
 - **Data Params:**
 
-  `value: number`
-
   **Required:**
 
   `transactionCategoryId: string`<br />
@@ -1162,7 +1160,7 @@ Get all user expenses.
 
   - **Code:** 200 <br />
     **Content:**
-    `[{ _id: string, user: string, category: string, value: number, maxValue: number }]`
+    `[{ value: number, expense: { _id: string, user: string, category: string, maxValue: number } }]`
 
 ## **Delete**
 
@@ -1249,7 +1247,6 @@ Get all user cards.
     **Content:**
     `{ _id: string, username: string, value: number, limit: number, closeDay: number, account: { _id: string, user: string, transactions: [{}], name: string, bank: string, value: number, card: string, type: string, __v: number }, user: string, __v: number }`
 
-
 ## **Get Transactions**
 
 Get all card transactions.
@@ -1280,7 +1277,6 @@ Get all card transactions.
   - **Code:** 200 <br />
     **Content:**
     `{ totalOfPages: number, transactions: [{ _id: string, title: string, description: string, category?: string, account: string, user: string, transferAccount?: string, isCard: boolean, type: string }] }`
-
 
 # **Transactions**
 
@@ -1468,4 +1464,3 @@ Delete a fixed transaction.
   - **Code:** 200 <br />
     **Content:**
     `{ message: "Fixed transaction deleted with success." }`
-

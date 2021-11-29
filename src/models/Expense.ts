@@ -6,7 +6,6 @@ import { TransactionCategoryInterface } from "./TransactionCategory";
 export interface ExpenseInterface {
   user: PopulatedDoc<UserInterface & Document>;
   category: PopulatedDoc<TransactionCategoryInterface & Document>;
-  value: number;
   maxValue: number;
 }
 
@@ -20,10 +19,6 @@ const ExpenseSchema = new Schema<ExpenseInterface>({
     type: Schema.Types.ObjectId,
     ref: "TransactionCategory",
     required: true,
-  },
-  value: {
-    type: Number,
-    default: 0,
   },
   maxValue: {
     type: Number,
