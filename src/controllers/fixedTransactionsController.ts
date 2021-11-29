@@ -164,7 +164,7 @@ export default {
 
       return res
         .status(200)
-        .json({ error: "Fixed transaction create with success." });
+        .json({ error: "Fixed transaction deleted with success." });
     } catch (err) {
       return res.status(500);
     }
