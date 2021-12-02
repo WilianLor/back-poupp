@@ -101,7 +101,7 @@ export default {
       if (category.income) {
         return res
           .status(406)
-          .json({ error: "This category does not is an output category" });
+          .json({ error: "This category does not is an outcome category" });
       }
 
       const fixedTransactionData = {

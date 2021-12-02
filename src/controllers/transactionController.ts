@@ -114,7 +114,7 @@ export default {
         return res
           .status(201)
           .json({ message: "Transaction created with success." });
-      case "output":
+      case "outcome":
         const { isCard } = req.body;
 
         if (!categoryId) {
@@ -129,18 +129,18 @@ export default {
             .json({ error: "This category id is invalid." });
         }
 
-        const outputCategory = await TransactionCategory.findById(categoryId);
+        const outcomeCategory = await TransactionCategory.findById(categoryId);
 
-        if (!outputCategory) {
+        if (!outcomeCategory) {
           return res
             .status(406)
             .json({ error: "This category id is invalid." });
         }
 
-        if (outputCategory.income) {
+        if (outcomeCategory.income) {
           return res
             .status(406)
-            .json({ error: "This category does not is an output category." });
+            .json({ error: "This category does not is an outcome category." });
         }
 
         if (!account.card && isCard) {
@@ -153,31 +153,31 @@ export default {
           return res.status(406).json({ error: "You can't max out your card" });
         }
 
-        const outputTransactionData = {
+        const outcomeTransactionData = {
           user: userId,
           category: categoryId,
           account: accountId,
-          type: "output",
+          type: "outcome",
           title,
           isCard,
           description,
           value,
         };
 
-        const outputTransaction = await Transaction.create(
-          outputTransactionData
+        const outcomeTransaction = await Transaction.create(
+          outcomeTransactionData
         );
 
         if (isCard) {
           await Account.findByIdAndUpdate(accountId, {
-            $push: { transactions: outputTransaction.id },
+            $push: { transactions: outcomeTransaction.id },
           });
           await Card.findByIdAndUpdate(account.card._id, {
             value: account.card.value + value,
           });
         } else {
           await Account.findByIdAndUpdate(accountId, {
-            $push: { transactions: outputTransaction.id },
+            $push: { transactions: outcomeTransaction.id },
             value: account.value - value,
           });
         }
@@ -215,12 +215,10 @@ export default {
         }
 
         if (account.value < value) {
-          return res
-            .status(406)
-            .json({
-              error:
-                "You do not have the necessary funds to carry out this transaction.",
-            });
+          return res.status(406).json({
+            error:
+              "You do not have the necessary funds to carry out this transaction.",
+          });
         }
 
         const transferTransactionData = {
@@ -269,7 +267,9 @@ export default {
     }
 
     try {
-      const transactions = await Transaction.find({ user: userId });
+      const transactions = await Transaction.find({ user: userId }).populate(
+        "category"
+      );
 
       const filtredTransactions = transactions.filter(
         (transaction) =>

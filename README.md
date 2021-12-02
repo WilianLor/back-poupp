@@ -1079,7 +1079,7 @@ Get all user accounts.
 
   - **Code:** 200 <br />
     **Content:**
-    `[{ name: string, bank: string, value: number, card: string, user: { _id: string, name: string, email: string, passwordVersion: number, admin: boolean, accounts: [], createdAt: date, updatedAt: date, __v: number }, type: string, transactions: [] }]`
+    `[{ _id: string, name: string, bank?: string, value: number, card?: string, type: string, transactions: [{ _id: string, title: string, value: number, description: string, category: string, account: string, user: string, isCard: boolean, type: string, createdAt: date, updatedAt: date, __v: number }] }]`
 
 ## **Delete**
 
@@ -1276,7 +1276,7 @@ Get all card transactions.
 
   - **Code:** 200 <br />
     **Content:**
-    `{ totalOfPages: number, transactions: [{ _id: string, title: string, description: string, category?: string, account: string, user: string, transferAccount?: string, isCard: boolean, type: string }] }`
+    `{ totalOfPages: number, transactions: [{ _id: string, value: number, title: string, description: string, category?: string, account: string, user: string, transferAccount?: string, isCard: boolean, type: string }] }`
 
 # **Transactions**
 
@@ -1372,7 +1372,7 @@ Get user transactions by month.
 
   - **Code:** 200 <br />
     **Content:**
-    `{ transactions: [{ _id: string, title: string, description: string, category?: string, account: string, user: string, transferAccount?: string, isCard: boolean, type: string }], totalOfPages: number }`
+    `{ transactions: [{ _id: string, value: number, title: string, description: string, category?: { _id: string, name: string, necessary: number, income: boolean, type: string, __v: number }, account: string, user: string, transferAccount?: string, isCard: boolean, type: string }], totalOfPages: number }`
 
 # **Fixed Transactions**
 

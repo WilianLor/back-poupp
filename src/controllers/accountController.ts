@@ -16,9 +16,7 @@ export default {
     const { userId } = getParamsFromToken(authorization);
 
     if (!name) {
-      return res
-        .status(404)
-        .json({ error: "The account name is required." });
+      return res.status(404).json({ error: "The account name is required." });
     }
 
     if (!isValidObjectId(bank)) {
@@ -93,10 +91,9 @@ export default {
     const { userId } = getParamsFromToken(authorization);
 
     try {
-      const accounts = await Account.find({ user: userId }).select([
-        "-__v",
-        "-transactions",
-      ]);
+      const accounts = await Account.find({ user: userId })
+        .populate(["bank", "transactions"])
+        .select(["-__v", "-user"]);
 
       return res.status(200).json(accounts);
     } catch (err) {

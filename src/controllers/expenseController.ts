@@ -130,7 +130,7 @@ export default {
             transaction.createdAt.getFullYear() === year &&
             transaction.category &&
             transaction.category.toString() === expense.category.toString() &&
-            transaction.type === "output"
+            transaction.type === "outcome"
         );
 
         let value = 0;

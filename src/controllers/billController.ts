@@ -159,7 +159,7 @@ export default {
         category: billCategory._id,
         account: account.id,
         value,
-        type: "output",
+        type: "outcome",
         user: userId,
         isCard,
       };

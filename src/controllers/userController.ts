@@ -101,7 +101,8 @@ export default {
     const { email, password } = req.body;
 
     try {
-      const user = await User.findOne({ email })
+      
+      const user = await User.findOne({ email: email.toLowerCase() })
         .select("+password")
         .select("+passwordVersion");
 
@@ -330,10 +331,12 @@ export default {
           userId: user._id,
           passwordVersion: user.passwordVersion,
         }),
-        name: user.name,
-        hasInitialData,
-        admin: user.admin,
-        createdAt: user.createdAt,
+        user: {
+          name: user.name,
+          admin: user.admin,
+          hasInitialData,
+          createdAt: user.createdAt,
+        },
       };
 
       return res.status(200).json(data);

@@ -198,7 +198,7 @@ export default {
         category: goalTransactionCategory._id,
         account: goalAccount._id,
         user: userId,
-        type: "output",
+        type: "outcome",
       };
 
       const transaction = await Transaction.create(transactionData);
