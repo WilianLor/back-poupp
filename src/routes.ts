@@ -15,6 +15,7 @@ import goalController from "./controllers/goalController";
 import cardController from "./controllers/cardController";
 import transactionController from "./controllers/transactionController";
 import fixedTransactionsController from "./controllers/fixedTransactionsController";
+import youtuberController from "./controllers/youtuberController";
 
 import auth from "./middlewares/auth";
 import admin from "./middlewares/admin";
@@ -137,5 +138,9 @@ routes.delete(
   fixedTransactionsController.delete
 );
 routes.get("/fixedtransactions", auth, fixedTransactionsController.getAll);
+
+routes.post("/youtubers/create", admin, youtuberController.create);
+routes.get("/youtubers", auth, youtuberController.getAll);
+routes.delete("/youtubers/delete", admin, youtuberController.delete);
 
 export default routes;

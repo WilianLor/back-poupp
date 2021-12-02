@@ -1464,3 +1464,85 @@ Delete a fixed transaction.
   - **Code:** 200 <br />
     **Content:**
     `{ message: "Fixed transaction deleted with success." }`
+
+# **Youtuber**
+
+## **Create - Admin**
+
+Admin create a youtuber.
+
+- **URL**
+
+  `/youtuber/create`
+
+- **Method:**
+
+  `POST`
+
+- **Header Params**
+
+  `Authorization: "Bearer <TOKEN>"`
+
+- **Data Params**
+
+  **Required:**
+
+  `title: string`<br />
+  `channelId: string`<br />
+  `picture: string`
+
+- **Success Response:**
+
+  - **Code:** 201 <br />
+    **Content:**
+    `{ message: "Youtuber created with success." }`
+
+## **Get All**
+
+Get all youtubers.
+
+- **URL**
+
+  `/youtubers`
+
+- **Method:**
+
+  `GET`
+
+- **Header Params**
+
+  `Authorization: "Bearer <TOKEN>"`
+
+- **Success Response:**
+
+  - **Code:** 200 <br />
+    **Content:**
+    `[{ _id: string, title: string, picture: string, channelId: string }]`
+
+## **Delete - Admin**
+
+Delete a youtuber.
+
+- **URL**
+
+  `/youtubers/delete`
+
+- **Method:**
+
+  `DELETE`
+
+- **Header Params**
+
+  `Authorization: "Bearer <TOKEN>"`
+
+- **Query Params:**
+
+  **Required:**
+
+  `youtubeId: string`
+
+- **Success Response:**
+
+  - **Code:** 200 <br />
+    **Content:**
+    `{ message: "Youtuber deleted with success." }`
