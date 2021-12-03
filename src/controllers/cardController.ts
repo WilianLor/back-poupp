@@ -68,10 +68,12 @@ export default {
       }
 
       const cardData = {
+        username,
         user: userId,
         account: accountId,
         limit,
         closeDay,
+        bank: account.bank._id,
       };
 
       const card = await Card.create(cardData);
@@ -92,7 +94,7 @@ export default {
     const { userId } = getParamsFromToken(authorization);
 
     try {
-      const cards = await Card.find({ user: userId }).populate(["account"]);
+      const cards = await Card.find({ user: userId }).populate(["account", "bank", "transactions"]);
 
       return res.status(200).json(cards);
     } catch (err) {

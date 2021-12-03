@@ -1245,7 +1245,7 @@ Get all user cards.
 
   - **Code:** 200 <br />
     **Content:**
-    `{ _id: string, username: string, value: number, limit: number, closeDay: number, account: { _id: string, user: string, transactions: [{}], name: string, bank: string, value: number, card: string, type: string, __v: number }, user: string, __v: number }`
+    `{ _id: string, username: string, value: number, limit: number, closeDay: number, account: { _id: string, user: string, transactions: [{}], name: string, bank: string, value: number, card: string, type: string, __v: number }, transactions: [{}], user: string, __v: number, bank: string }`
 
 ## **Get Transactions**
 

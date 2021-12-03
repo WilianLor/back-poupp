@@ -173,6 +173,7 @@ export default {
             $push: { transactions: outcomeTransaction.id },
           });
           await Card.findByIdAndUpdate(account.card._id, {
+            $push: { transactions: outcomeTransaction.id },
             value: account.card.value + value,
           });
         } else {

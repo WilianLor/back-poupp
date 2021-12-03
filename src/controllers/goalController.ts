@@ -120,7 +120,9 @@ export default {
     const { userId } = getParamsFromToken(authorization);
 
     try {
-      const goals = await Goal.find({ user: userId }).select("-__v");
+      const goals = await Goal.find({ user: userId })
+        .populate("category")
+        .select("-__v");
 
       const goalAccount = await Account.findOne({ user: userId, type: "goal" });
 
