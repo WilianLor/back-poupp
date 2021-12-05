@@ -48,7 +48,7 @@ User initial configuration on Poupp.
 
   **Required:**
 
-  `categories: [{ categoryId: string }]`<br />
+  `categories: [{ categoryId: string, maxValue: number }]`<br />
   `incomeValue: string`
 
 - **Success Response:**
