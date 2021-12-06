@@ -553,6 +553,12 @@ Get all posts.
 - **Header Params**
 
   `Authorization: "Bearer <TOKEN>"`
+  
+- **Query Params:**
+
+  **Required:**
+
+  `topic: string`
 
 - **Success Response:**
 
