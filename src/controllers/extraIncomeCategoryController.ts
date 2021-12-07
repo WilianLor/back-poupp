@@ -6,7 +6,7 @@ import ExtraIncomeGoal from "../models/ExtraIncomeGoals";
 
 export default {
   async create(req: Request, res: Response) {
-    const { name, type } = req.body;
+    const { name, type, image } = req.body;
 
     if (!name) {
       return res
@@ -18,6 +18,12 @@ export default {
       return res
         .status(404)
         .json({ error: "The extra income category type is required." });
+    }
+
+    if (!image) {
+      return res
+        .status(404)
+        .json({ error: "The extra income category image is required." });
     }
 
     try {
@@ -32,6 +38,7 @@ export default {
       const extraIncomeCategoryData = {
         name,
         type,
+        image
       };
 
       await ExtraIncomeCategory.create(extraIncomeCategoryData);

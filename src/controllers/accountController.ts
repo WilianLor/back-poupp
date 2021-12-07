@@ -92,7 +92,7 @@ export default {
 
     try {
       const accounts = await Account.find({ user: userId })
-        .populate(["bank", "transactions"])
+        .populate(["bank", "transactions", "card"])
         .select(["-__v", "-user"]);
 
       return res.status(200).json(accounts);

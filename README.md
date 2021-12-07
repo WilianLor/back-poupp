@@ -366,7 +366,8 @@ Admin create a new extra income category.
   **Required:**
 
   `name: string`<br />
-  `type: string`
+  `type: string`<br />
+  `image: string`
 
 - **Success Response:**
 
@@ -394,7 +395,7 @@ Get all extra income categories.
 
   - **Code:** 200 <br />
     **Content:**
-    `[{ _id: string, name: string, type: string }]`
+    `[{ _id: string, name: string, type: string, image: string }]`
 
 ## **Delete - Admin**
 
@@ -1299,6 +1300,7 @@ Create a transaction.
 - **Data Params:**
 
   `isCard: boolean`<br />
+  `categoryId: string`<br />
   `transferAccountId: string`
 
   **Required:**
@@ -1306,7 +1308,6 @@ Create a transaction.
   `type: string`<br />
   `title: string`<br />
   `description: string`<br />
-  `categoryId: string`<br />
   `accountId: string`<br />
   `value: string`
 

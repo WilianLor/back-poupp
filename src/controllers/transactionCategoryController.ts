@@ -30,7 +30,7 @@ export default {
           .json({ error: "The category necessary is required." });
       }
     } else {
-      if (type === "bill" || type === "goal" || type === "extraIncome" || type !== "invoiceCard") {
+      if (type === "bill" || type === "goal" || type === "extraIncome" || type === "invoiceCard") {
         return res
           .status(404)
           .json({ error: "This category cannot have necessary." });
@@ -44,7 +44,7 @@ export default {
           .json({ error: "This category name is already in use." });
       }
 
-      if (type === "goal" || type === "bill" || type === "extraIncome" || type !== "invoiceCard") {
+      if (type === "goal" || type === "bill" || type === "extraIncome" || type === "invoiceCard") {
         if (await TransactionCategory.findOne({ type })) {
           return res
             .status(406)

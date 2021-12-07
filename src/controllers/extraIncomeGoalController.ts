@@ -127,7 +127,7 @@ export default {
     try {
       const extraIncomeGoals = await ExtraIncomeGoal.find({
         user: userId,
-      }).select("-__v");
+      }).populate("category").select("-__v");
 
       return res.status(200).json(extraIncomeGoals);
     } catch (err) {

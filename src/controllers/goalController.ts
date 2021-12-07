@@ -21,6 +21,7 @@ export default {
     }
 
     if (!isValidObjectId(goalCategoryId)) {
+      console.log("goal category")
       return res
         .status(406)
         .json({ error: "This goal category id is invalid." });
@@ -45,6 +46,7 @@ export default {
     const expirationDateFormated = new Date(expirationDate);
 
     if (expirationDateFormated < new Date(Date.now())) {
+      console.log("goal expiration date")
       return res
         .status(406)
         .json({ error: "This expiration date is invalid." });
@@ -52,12 +54,14 @@ export default {
 
     try {
       if (await Goal.findOne({ title })) {
+        console.log("goal title")
         return res
           .status(406)
           .json({ error: "This goal name is already in use." });
       }
 
       if (!(await GoalCategory.findById(goalCategoryId))) {
+        console.log("goal categoryId")
         return res
           .status(406)
           .json({ error: "This goal category id is invalid." });

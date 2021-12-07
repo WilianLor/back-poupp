@@ -50,14 +50,7 @@ export default {
     }
 
     try {
-      const posts = await Post.find({ topic }).select([
-        "-author",
-        "-comments",
-        "-topic",
-        "-content",
-        "-__v",
-        "-updatedAt",
-      ]);
+      const posts = await Post.find({ topic }).populate("author");
 
       return res.status(200).json(posts);
     } catch (err) {
