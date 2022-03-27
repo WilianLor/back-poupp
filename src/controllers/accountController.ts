@@ -6,7 +6,7 @@ import Account from "../models/Account";
 import Card from "../models/Card";
 import User from "../models/User";
 
-import getParamsFromToken from "../functions/getParamsFromToken";
+import getParamsFromToken from "../utils/getParamsFromToken";
 
 export default {
   async create(req: Request, res: Response) {

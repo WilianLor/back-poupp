@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { isValidObjectId } from "mongoose";
-import getParamsFromToken from "../functions/getParamsFromToken";
+import getParamsFromToken from "../utils/getParamsFromToken";
 
 import FixedTransaction from "../models/FixedTransaction";
 import Account from "../models/Account";

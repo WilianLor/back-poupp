@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import Bill from "../models/Bill";
 
-import getParamsFromToken from "../functions/getParamsFromToken";
+import getParamsFromToken from "../utils/getParamsFromToken";
 import { isValidObjectId } from "mongoose";
 import Account from "../models/Account";
 import TransactionCategory from "../models/TransactionCategory";

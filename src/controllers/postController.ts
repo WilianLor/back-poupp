@@ -1,7 +1,7 @@
 import Post from "../models/Post";
 import Comment from "../models/Comment";
 
-import getParamsFromToken from "../functions/getParamsFromToken";
+import getParamsFromToken from "../utils/getParamsFromToken";
 
 import { Request, Response } from "express";
 import { isValidObjectId } from "mongoose";

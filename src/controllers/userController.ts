@@ -5,10 +5,10 @@ import User from "../models/User";
 import Expense from "../models/Expense";
 import TransactionCategory from "../models/TransactionCategory";
 
-import validateEmail from "../functions/validateEmail";
-import sendResetToken from "../functions/sendResetToken";
-import generateToken from "../functions/generateToken";
-import getParamsFromToken from "../functions/getParamsFromToken";
+import validateEmail from "../utils/validateEmail";
+import sendResetToken from "../utils/sendResetToken";
+import generateToken from "../utils/generateToken";
+import getParamsFromToken from "../utils/getParamsFromToken";
 import Account from "../models/Account";
 
 export default {

@@ -4,7 +4,7 @@ import { isValidObjectId } from "mongoose";
 import Comment from "../models/Comment";
 import Post from "../models/Post";
 
-import getParamsFromToken from "../functions/getParamsFromToken";
+import getParamsFromToken from "../utils/getParamsFromToken";
 
 export default {
   async create(req: Request, res: Response) {
